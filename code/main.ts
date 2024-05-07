@@ -75,6 +75,7 @@ class main implements m4m.framework.IUserCode {
         this.addBtn("渲染==>", () => {
             demoList.addBtn("test_posteffect(后期效果)", () => new t.test_posteffect());
             demoList.addBtn("test_blend", () => new t.test_blend());
+            demoList.addBtn("实时阴影", () => new realtimeShadow());
             demoList.addBtn("test_shadowmap", () => new test_ShadowMap());
             demoList.addBtn("test_tex_uv", () => new test_texuv());
             demoList.addBtn("test_PBR 展示", () => new test_pbr());

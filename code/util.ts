@@ -368,4 +368,22 @@ namespace util {
         return result;
     }
 
+    /**
+     * 根据 shader 名 创建一个材质对象
+     * @param shaderName  shader 名
+     * @returns 材质
+     */
+    export function makeMaterialByShaderName(shaderName: string) {
+        let app = m4m.framework.sceneMgr.app;
+        let sh = app.getAssetMgr().getShader(shaderName) as m4m.framework.shader;
+        if (!sh) {
+            console.error(`not find shader by shader name : ${shaderName} `);
+            return null;
+        }
+
+        let result = new m4m.framework.material();
+        result.setShader(sh);
+        return result;
+    }
+
 }

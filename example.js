@@ -69,6 +69,11 @@ var __assign = (this && this.__assign) || function () {
 var demoList = /** @class */ (function () {
     function demoList() {
     }
+    /**
+     * 添加按钮
+     * @param title 按钮标签
+     * @param demo 执行函数
+     */
     demoList.addBtn = function (title, demo) {
         if (!title || !demo)
             return;
@@ -457,6 +462,12 @@ var demo_navigaionRVO = /** @class */ (function () {
         this.addbtn("150px", "删除元素", function () {
         });
     };
+    /**
+     * 初始化 player
+     * @param x 坐标x
+     * @param y 坐标y
+     * @param z 坐标z
+     */
     demo_navigaionRVO.prototype.initPlayer = function (x, y, z) {
         if (this.isInitPlayer)
             return;
@@ -480,6 +491,11 @@ var demo_navigaionRVO = /** @class */ (function () {
         // this.mods.push(this.player);
         // this.goals.push([x, z]);
     };
+    /**
+     * 加载场景
+     * @param assetName 资源名
+     * @param isCompress 是压缩模式？
+     */
     demo_navigaionRVO.prototype.loadScene = function (assetName, isCompress) {
         var _this = this;
         if (isCompress === void 0) { isCompress = false; }
@@ -531,6 +547,11 @@ var demo_navigaionRVO = /** @class */ (function () {
         }
     };
     //----------- 点击navmesh处理 ----------------
+    /**
+     * 在导航mesh 上发射检查射线
+     * @param oPos 位置
+     * @returns 点到的位置
+     */
     demo_navigaionRVO.prototype.PosRayNavmesh = function (oPos) {
         if (!this.navmeshMgr.navMesh || !this.navmeshMgr.navTrans)
             return;
@@ -542,6 +563,9 @@ var demo_navigaionRVO = /** @class */ (function () {
             return;
         return pickinfo.hitposition;
     };
+    /**
+     * 点击
+     */
     demo_navigaionRVO.prototype.pickDown = function () {
         if (this.isAKeyDown) {
             //添加 敌人
@@ -552,6 +576,10 @@ var demo_navigaionRVO = /** @class */ (function () {
             this.tryFindingPath();
         }
     };
+    /**
+     * 射线检测导航mesh
+     * @returns 交叉点
+     */
     demo_navigaionRVO.prototype.rayNavMesh = function () {
         var navTrans = this.navmeshMgr.navTrans;
         var navmesh = this.navmeshMgr.navMesh;
@@ -566,6 +594,10 @@ var demo_navigaionRVO = /** @class */ (function () {
         //console.error(pickinfo.hitposition);
         return pickinfo.hitposition;
     };
+    /**
+     * 添加敌人
+     * @returns
+     */
     demo_navigaionRVO.prototype.addEnemy = function () {
         var endPos = this.rayNavMesh();
         if (!endPos)
@@ -585,6 +617,9 @@ var demo_navigaionRVO = /** @class */ (function () {
         // this.goals.push([endPos.x, endPos.z]);
         // this.mods.push(trans);
     };
+    /**
+     * 尝试 找路径
+     */
     demo_navigaionRVO.prototype.tryFindingPath = function () {
         var endPos = this.rayNavMesh();
         if (!endPos)
@@ -629,6 +664,10 @@ var demo_navigaionRVO = /** @class */ (function () {
             this.rvoMgr.setRoadPoints(arr);
         }
     };
+    /**
+     * 绘制线
+     * @param points 线的点
+     */
     demo_navigaionRVO.prototype.drawLine = function (points) {
         if (this.lastLine) {
             this.lastLine.gameObject.visible = false;
@@ -647,6 +686,11 @@ var demo_navigaionRVO = /** @class */ (function () {
         this.scene.addChild(this.lastLine);
         this.lastLine.markDirty();
     };
+    /**
+     * 生成线mesh
+     * @param points 线点列表
+     * @returns mesh
+     */
     demo_navigaionRVO.prototype.genLineMesh = function (points) {
         var meshD = new m4m.render.meshData();
         meshD.pos = [];
@@ -680,6 +724,10 @@ var demo_navigaionRVO = /** @class */ (function () {
         }
         return _mesh;
     };
+    /**
+     * 创建所有的点
+     * @param count 数量
+     */
     demo_navigaionRVO.prototype.createAllPoint = function (count) {
         this.points.forEach(function (element) {
             if (element)
@@ -694,6 +742,14 @@ var demo_navigaionRVO = /** @class */ (function () {
             }
         }
     };
+    /**
+     * 设置路点
+     * @param index 索引
+     * @param x 坐标x
+     * @param y 坐标y
+     * @param z 坐标z
+     * @param color 路点颜色
+     */
     demo_navigaionRVO.prototype.setRoadPoint = function (index, x, y, z, color) {
         var cube = this.points[index];
         cube.localTranslate.x = x;
@@ -716,6 +772,12 @@ var demo_navigaionRVO = /** @class */ (function () {
         mf.mesh.glMesh.uploadVertexSubData(this.app.webgl, v32);
         cube.gameObject.visible = true;
     };
+    /**
+     * 生成几何模型
+     * @param meshType mesh类型
+     * @param color 颜色
+     * @returns 节点
+     */
     demo_navigaionRVO.prototype.generateGeomtry = function (meshType, color) {
         if (meshType === void 0) { meshType = "cube"; }
         if (color === void 0) { color = null; }
@@ -733,6 +795,10 @@ var demo_navigaionRVO = /** @class */ (function () {
         this.scene.addChild(G3D);
         return G3D;
     };
+    /**
+     * 更新
+     * @param delta 帧间时间
+     */
     demo_navigaionRVO.prototype.update = function (delta) {
         if (this.pointDown == false && this.inputMgr.point.touch == true) //pointdown
          {
@@ -749,6 +815,12 @@ var demo_navigaionRVO = /** @class */ (function () {
         CameraController.instance().update(delta);
         this.rvoMgr.update(); // 更新 Transform
     };
+    /**
+     * 添加html按钮
+     * @param topOffset top偏移
+     * @param textContent 内容文本
+     * @param func 点击执行函数
+     */
     demo_navigaionRVO.prototype.addbtn = function (topOffset, textContent, func) {
         var _this = this;
         var btn = document.createElement("button");
@@ -784,6 +856,11 @@ var dome_loadaniplayer = /** @class */ (function () {
         this.skillName = "pc2_cskill1.FBAni.aniclip.bin";
         this.names = ["pc2_cskill1.FBAni.aniclip.bin", "pc2_skill1.FBAni.aniclip.bin", "pc2_skill34.FBAni.aniclip.bin", "pc2_skill27.FBAni.aniclip.bin", "pc1_skill27.FBAni.aniclip.bin"];
     }
+    /**
+     * 加载shader
+     * @param laststate
+     * @param state 加载状态
+     */
     dome_loadaniplayer.prototype.loadShader = function (laststate, state) {
         this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
             if (s.isfinish) {
@@ -791,6 +868,11 @@ var dome_loadaniplayer = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载动画角色
+     * @param laststate
+     * @param state 加载状态
+     */
     dome_loadaniplayer.prototype.loadRole = function (laststate, state) {
         var _this = this;
         var name = this.roleName;
@@ -816,6 +898,10 @@ var dome_loadaniplayer = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载角色技能资源
+     * @param name 资源名字
+     */
     dome_loadaniplayer.prototype.loadSkill = function (name) {
         this.assetmgr.load("res/prefabs/roles/".concat(this.roleName, "/Resources/").concat(name), m4m.framework.AssetTypeEnum.Auto, function (s) {
             // if (s.isfinish) {
@@ -829,6 +915,10 @@ var dome_loadaniplayer = /** @class */ (function () {
             // }
         });
     };
+    /**
+     * 加载角色武器资源
+     * @param name 资源名字
+     */
     dome_loadaniplayer.prototype.loadWeapon = function (name) {
         var _this = this;
         this.assetmgr.load("res/prefabs/weapons/".concat(name, "/").concat(name, ".assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -855,7 +945,11 @@ var dome_loadaniplayer = /** @class */ (function () {
             }
         });
     };
-    //初始化操作按钮
+    /**
+     * 初始化操作按钮
+     * @param laststate
+     * @param state 加载状态
+     */
     dome_loadaniplayer.prototype.ctrlBtn = function (laststate, state) {
         var _this = this;
         var play = document.createElement("button");
@@ -929,7 +1023,11 @@ var dome_loadaniplayer = /** @class */ (function () {
         this.app.container.appendChild(sel);
         state.finish = true;
     };
-    //初始化摄像机
+    /**
+     * 初始化摄像机
+     * @param laststate
+     * @param state 加载状态
+     */
     dome_loadaniplayer.prototype.addCam = function (laststate, state) {
         var objCam = new m4m.framework.transform;
         objCam.name = "sth.";
@@ -966,6 +1064,9 @@ var t;
             this.timer = 0;
             this.taskmgr = new m4m.framework.taskMgr();
         }
+        /**
+         * 添加cube
+         */
         light_d1.prototype.addcube = function () {
             var smesh1 = this.app.getAssetMgr().getDefaultMesh("cube");
             for (var i = -4; i < 5; i++) {
@@ -993,6 +1094,9 @@ var t;
                 }
             }
         };
+        /**
+         * 添加相机和灯光
+         */
         light_d1.prototype.addCameraAndLight = function () {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -1095,6 +1199,11 @@ var localSave = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    /**
+     * 字符串转 utf8字符数据
+     * @param str 字符串转
+     * @returns utf8字符数据
+     */
     localSave.prototype.stringToUtf8Array = function (str) {
         var bstr = [];
         for (var i = 0; i < str.length; i++) {
@@ -1122,15 +1231,31 @@ var localSave = /** @class */ (function () {
         }
         return bstr;
     };
+    /**
+     * 文件 字符转串 blob数据
+     * @param string 字符转串数据
+     * @returns blob数据
+     */
     localSave.prototype.file_str2blob = function (string) {
         var u8 = new Uint8Array(this.stringToUtf8Array(string));
         var blob = new Blob([u8]);
         return blob;
     };
+    /**
+     * 文件 utf8数据 转串 blob数据
+     * @param array utf8数据
+     * @returns blob数据
+     */
     localSave.prototype.file_u8array2blob = function (array) {
         var blob = new Blob([array]);
         return blob;
     };
+    /**
+     * 保存
+     * @param path 路径
+     * @param file 文件
+     * @returns
+     */
     localSave.prototype.save = function (path, file) {
         var req = new XMLHttpRequest(); //ness
         //用同步方法，本地操作
@@ -1144,6 +1269,12 @@ var localSave = /** @class */ (function () {
             throw new Error(json["error"]);
         return json["code"];
     };
+    /**
+     * 执行开始 Direct模式
+     * @param exec exe 字符串
+     * @param path 路径
+     * @param argc 参数
+     */
     localSave.prototype.startDirect = function (exec, path, argc) {
         var req = new XMLHttpRequest(); //ness
         //用同步方法，本地操作
@@ -1156,6 +1287,11 @@ var localSave = /** @class */ (function () {
         var json = req.responseText;
         return json;
     };
+    /**
+     * 执行开始
+     * @param path 路径
+     * @returns json
+     */
     localSave.prototype.start = function (path) {
         var req = new XMLHttpRequest(); //ness
         //用同步方法，本地操作
@@ -1164,6 +1300,11 @@ var localSave = /** @class */ (function () {
         var json = req.responseText;
         return json;
     };
+    /**
+     * 开始 不等待
+     * @param path  路径
+     * @param fun  回调函数
+     */
     localSave.prototype.startnowait = function (path, fun) {
         if (fun === void 0) { fun = null; }
         var req = new XMLHttpRequest(); //ness
@@ -1208,6 +1349,11 @@ var localSave = /** @class */ (function () {
     //     };
     //     req.send();
     // }
+    /**
+     * 立即加载文本
+     * @param url url
+     * @param fun 回调函数
+     */
     localSave.prototype.loadTextImmediate = function (url, fun) {
         var req = new XMLHttpRequest();
         req.open("GET", url);
@@ -1226,6 +1372,11 @@ var localSave = /** @class */ (function () {
         };
         req.send();
     };
+    /**
+     * 立即加载Blob数据
+     * @param url url
+     * @param fun 回调函数
+     */
     localSave.prototype.loadBlobImmediate = function (url, fun) {
         var req = new XMLHttpRequest();
         req.open("GET", url);
@@ -1259,6 +1410,10 @@ var main = /** @class */ (function () {
         this.btns = [];
     }
     main_1 = main;
+    /**
+     * 当 开始执行函数
+     * @param app 引擎app
+     */
     main.prototype.onStart = function (app) {
         if (!main_1.instance)
             main_1.instance = this;
@@ -1307,6 +1462,7 @@ var main = /** @class */ (function () {
         this.addBtn("渲染==>", function () {
             demoList.addBtn("test_posteffect(后期效果)", function () { return new t.test_posteffect(); });
             demoList.addBtn("test_blend", function () { return new t.test_blend(); });
+            demoList.addBtn("实时阴影", function () { return new realtimeShadow(); });
             demoList.addBtn("test_shadowmap", function () { return new test_ShadowMap(); });
             demoList.addBtn("test_tex_uv", function () { return new test_texuv(); });
             demoList.addBtn("test_PBR 展示", function () { return new test_pbr(); });
@@ -1442,6 +1598,11 @@ var main = /** @class */ (function () {
         // this.addBtn("test_eff",()=>new dome.db_test_eff());
         //this.addBtn("test_f14",()=>new dome.db_test_f14eff());
     };
+    /**
+     * 添加按钮
+     * @param text 文本字符串数据
+     * @param act 行为函数
+     */
     main.prototype.addBtn = function (text, act) {
         var _this = this;
         var btn = document.createElement("button");
@@ -1464,6 +1625,9 @@ var main = /** @class */ (function () {
         btn.style.position = "absolute";
         this.app.container.appendChild(btn);
     };
+    /**
+     * 清理按钮
+     */
     main.prototype.clearBtn = function () {
         for (var i = 0; i < this.btns.length; i++) {
             this.app.container.removeChild(this.btns[i]);
@@ -1472,10 +1636,18 @@ var main = /** @class */ (function () {
         this.y = this.def_y;
         this.btns.length = 0;
     };
+    /**
+     * 当更新
+     * @param delta  帧间间隔时间
+     */
     main.prototype.onUpdate = function (delta) {
         if (this.state != null)
             this.state.update(delta);
     };
+    /**
+     * 是关闭的
+     * @returns
+     */
     main.prototype.isClosed = function () {
         return false;
     };
@@ -1524,6 +1696,87 @@ var mini_sample = /** @class */ (function () {
     mini_sample.prototype.update = function (delta) {
     };
     return mini_sample;
+}());
+/** 实时阴影样例 */
+var realtimeShadow = /** @class */ (function () {
+    function realtimeShadow() {
+    }
+    realtimeShadow.prototype.changeMaterial = function (node, col) {
+        var mr = node.gameObject.renderer;
+        if (mr == null)
+            return;
+        var mat = util.makeMaterialByShaderName("diffuse.shader.json");
+        if (!mat)
+            return;
+        var colV4 = new m4m.math.vector4();
+        m4m.math.vec4SetByColor(colV4, col);
+        mat.setVector4("_MainColor", colV4);
+        mr.materials[0] = mat;
+    };
+    realtimeShadow.prototype.makeSeceneObjects = function (app) {
+        var scene = app.getScene();
+        //地面
+        var obj0 = m4m.framework.TransformUtil.CreatePrimitive(m4m.framework.PrimitiveType.Plane, app);
+        obj0.setWorldScale(new m4m.math.vector3(3, 1, 3));
+        //方块
+        var obj1 = m4m.framework.TransformUtil.CreatePrimitive(m4m.framework.PrimitiveType.Cube, app);
+        obj1.setWorldPosition(new m4m.math.vector3(0, 1, 0));
+        //球
+        var obj2 = m4m.framework.TransformUtil.CreatePrimitive(m4m.framework.PrimitiveType.Sphere, app);
+        obj2.setWorldPosition(new m4m.math.vector3(2, 1.5, 0));
+        //change mat
+        this.changeMaterial(obj0, new m4m.math.color(1, 1, 1, 1));
+        this.changeMaterial(obj1, new m4m.math.color(1, 0.5, 0.6, 1));
+        this.changeMaterial(obj2, new m4m.math.color(0.2, 0.6, 1, 1));
+        //add to scene
+        scene.addChild(obj0);
+        scene.addChild(obj1);
+        scene.addChild(obj2);
+    };
+    realtimeShadow.prototype.start = function (app) {
+        return __awaiter(this, void 0, void 0, function () {
+            var scene, objDirLight, dirRotate, dirLight, objCam, cam, hoverc;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        scene = app.getScene();
+                        objDirLight = new m4m.framework.transform();
+                        scene.addChild(objDirLight);
+                        objDirLight.setWorldPosition(new m4m.math.vector3(0.5, 5, 0));
+                        dirRotate = new m4m.math.quaternion();
+                        m4m.math.quat2Lookat(objDirLight.getWorldPosition(), new m4m.math.vector4(), dirRotate);
+                        objDirLight.setWorldRotate(dirRotate);
+                        dirLight = objDirLight.gameObject.addComponent("light");
+                        dirLight.type = m4m.framework.LightTypeEnum.Direction;
+                        objCam = new m4m.framework.transform();
+                        scene.addChild(objCam);
+                        cam = objCam.gameObject.addComponent("camera");
+                        cam.near = 0.01;
+                        cam.far = 120;
+                        cam.fov = Math.PI * 0.3;
+                        objCam.localTranslate = new m4m.math.vector3(0, 15, -15);
+                        objCam.lookatPoint(new m4m.math.vector3(0, 0, 0));
+                        hoverc = cam.gameObject.addComponent("HoverCameraScript");
+                        hoverc.panAngle = 180;
+                        hoverc.tiltAngle = 45;
+                        hoverc.distance = 30;
+                        hoverc.scaleSpeed = 0.1;
+                        hoverc.lookAtPoint = new m4m.math.vector3(0, 2.5, 0);
+                        //load res
+                        return [4 /*yield*/, util.loadShader(app.getAssetMgr())];
+                    case 1:
+                        //load res
+                        _a.sent();
+                        //scene objs
+                        this.makeSeceneObjects(app);
+                        return [2 /*return*/];
+                }
+            });
+        });
+    };
+    realtimeShadow.prototype.update = function (delta) {
+    };
+    return realtimeShadow;
 }());
 var test_01 = /** @class */ (function () {
     function test_01() {
@@ -1651,6 +1904,10 @@ var test_01 = /** @class */ (function () {
         //this.cube3.localTranslate = new m4m.math.vector3(x * 2, 0, z * 2);
         //this.cube3.markDirty();
     };
+    /**
+     * 测试预制体
+     * @param cube 节点
+     */
     test_01.prototype.testPrefab = function (cube) {
         // cube.localScale.x = cube.localScale.y = cube.localScale.z = 1;
         // cube.localTranslate.x = 2;
@@ -1760,6 +2017,10 @@ var test_01 = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 测试 N 资源
+     * @param root
+     */
     test_01.prototype.testNRes = function (root) {
         var _this = this;
         var cndroot = "http://192.168.88.68:8088/public/1/hungryshark/Resources_new/";
@@ -1784,6 +2045,9 @@ var test_01 = /** @class */ (function () {
             });
         }); });
     };
+    /**
+     * 测试特效
+     */
     test_01.prototype.testEffect = function () {
         var _this = this;
         var assetMgr = this.app.getAssetMgr();
@@ -1900,10 +2164,17 @@ var test_loadSceneVR = /** @class */ (function () {
         this.normalCam.gameObject.visible = false;
         xrManager.setSession(session);
     };
+    /**
+     * 当退出VR模式时调用
+     */
     test_loadSceneVR.prototype.onExitVR = function () {
         console.log("\u9000\u51FA VR");
         this.normalCam.gameObject.visible = true;
     };
+    /**
+     * 初始化相机
+     * @param app
+     */
     test_loadSceneVR.prototype.initCam = function (app) {
         var objCamRoot = this.objCamRoot = new m4m.framework.transform();
         app.getScene().addChild(objCamRoot);
@@ -2196,7 +2467,10 @@ var xrManager = /** @class */ (function () {
             });
         });
     };
-    //尝试 将 xrlayer的fbo 绑定绘制
+    /**
+     * 尝试 将 xrlayer的fbo 绑定绘制
+     * @returns
+     */
     xrManager.tryXRFBOBind = function () {
         if (this.isBindXRFBO || !this.glBaseLayer.framebuffer)
             return;
@@ -2209,7 +2483,9 @@ var xrManager = /** @class */ (function () {
         this.vrCameraL.postQueues.push(this._color);
         this.vrCameraR.postQueues.push(this._color);
     };
-    //解除绑定
+    /**
+     * 尝试解除绑定
+     */
     xrManager.tryXRFBOUnBind = function () {
         if (!this.isBindXRFBO)
             return;
@@ -2229,6 +2505,10 @@ var xrManager = /** @class */ (function () {
             console.warn('当前正在运行，不能改变 ReferenceSpace 类型。');
         }
     };
+    /**
+     * 设置 foveation
+     * @param foveation
+     */
     xrManager.setFoveation = function (foveation) {
         // 0 = no foveation = full resolution
         // 1 = maximum foveation = the edges render at lower resolution
@@ -2284,6 +2564,10 @@ var xrManager = /** @class */ (function () {
             });
         }
     };
+    /**
+     * 改变主循环
+     * @param isXRLoopMode 是XR 循环？
+     */
     xrManager.cgMainLoop = function (isXRLoopMode) {
         var _this = this;
         var session = this.session;
@@ -2399,6 +2683,10 @@ var test_loadMulBundle = /** @class */ (function () {
         this.timer = 0;
         this.bere = false;
     }
+    /**
+     * 刷新纹理
+     * @param tran 节点
+     */
     test_loadMulBundle.prototype.refreshTexture = function (tran) {
         var meshrenderer = tran.gameObject.getComponentsInChildren("meshRenderer");
         var skinnmeshrenderer = tran.gameObject.getComponentsInChildren("skinnedMeshRenderer");
@@ -2425,6 +2713,9 @@ var test_loadMulBundle = /** @class */ (function () {
             }
         }
     };
+    /**
+     * 刷新动画pianduan
+     */
     test_loadMulBundle.prototype.refreshAniclip = function (tran) {
         // let anipalyer = tran.gameObject.getComponentsInChildren("aniplayer") as m4m.framework.aniplayer[];
         // for(let i=0; i<anipalyer.length; i++)
@@ -2437,6 +2728,11 @@ var test_loadMulBundle = /** @class */ (function () {
         //     anipalyer[i].playByIndex(0);
         // }
     };
+    /**
+     * 刷新光照贴图
+     * @param scene 场景
+     * @param rawscene  场景资源
+     */
     test_loadMulBundle.prototype.refreshLightMap = function (scene, rawscene) {
         scene.lightmaps = [];
         rawscene.resetLightMap(this.app.getAssetMgr());
@@ -2524,6 +2820,11 @@ var t;
             this.taskmgr.addTaskCall(this.initscene.bind(this));
             this.taskmgr.addTaskCall(this.addbtns.bind(this));
         };
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state
+         */
         test_pathAsset.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -2531,6 +2832,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载纹理
+         * @param laststate
+         * @param state
+         */
         test_pathAsset.prototype.loadTexture = function (laststate, state) {
             var texnumber = 2;
             this.app.getAssetMgr().load("res/rock256.png", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -2556,6 +2862,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载深度
+         * @param laststate
+         * @param state
+         */
         test_pathAsset.prototype.loadpath = function (laststate, state) {
             var pathnumber = 2;
             this.app.getAssetMgr().load("res/path/circlepath.path.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -2581,6 +2892,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载资源
+         * @param laststate
+         * @param state
+         */
         test_pathAsset.prototype.loadasset = function (laststate, state) {
             this.app.getAssetMgr().load("res/prefabs/rotatedLongTou/rotatedLongTou.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -2588,6 +2904,11 @@ var t;
                 }
             });
         };
+        /**
+         * 初始化场景
+         * @param laststate
+         * @param state
+         */
         test_pathAsset.prototype.initscene = function (laststate, state) {
             var _this = this;
             var objCam = new m4m.framework.transform();
@@ -2700,6 +3021,9 @@ var t;
         test_pathAsset.prototype.update = function (delta) {
             this.taskmgr.move(delta);
         };
+        /**
+         * 添加按钮
+         */
         test_pathAsset.prototype.addbtns = function () {
             var _this = this;
             this.addBtn("play", 10, 100, function () {
@@ -2723,6 +3047,13 @@ var t;
                 }
             });
         };
+        /**
+         * 添加按钮
+         * @param text 文本
+         * @param x 坐标x
+         * @param y 坐标y
+         * @param func 回调函数
+         */
         test_pathAsset.prototype.addBtn = function (text, x, y, func) {
             var btn = document.createElement("button");
             btn.textContent = text;
@@ -2737,6 +3068,12 @@ var t;
         return test_pathAsset;
     }());
     t.test_pathAsset = test_pathAsset;
+    /**
+     * 获取一个节点
+     * @param mat 材质
+     * @param meshname mesh资源名
+     * @returns 一个节点
+     */
     function DBgetAtrans(mat, meshname) {
         if (meshname === void 0) { meshname = null; }
         var trans = new m4m.framework.transform();
@@ -2755,6 +3092,12 @@ var t;
         return trans;
     }
     t.DBgetAtrans = DBgetAtrans;
+    /**
+     *  获取一个材质
+     * @param texname 纹理名
+     * @param shaderstring 着色器名
+     * @returns 材质
+     */
     function DBgetMat(texname, shaderstring) {
         if (texname === void 0) { texname = null; }
         if (shaderstring === void 0) { shaderstring = null; }
@@ -2776,6 +3119,10 @@ var test_loadprefab = /** @class */ (function () {
     function test_loadprefab() {
         this.timer = 0;
     }
+    /**
+     * 刷新纹理
+     * @param tran 节点
+     */
     test_loadprefab.prototype.refreshTexture = function (tran) {
         var meshrenderer = tran.gameObject.getComponentsInChildren("meshRenderer");
         var skinnmeshrenderer = tran.gameObject.getComponentsInChildren("skinnedMeshRenderer");
@@ -2804,6 +3151,11 @@ var test_loadprefab = /** @class */ (function () {
             }
         }
     };
+    /**
+     * 刷新动画片段
+     * @param tran 节点
+     * @param name 片段名
+     */
     test_loadprefab.prototype.refreshAniclip = function (tran, name) {
         // let anipalyer = tran.gameObject.getComponentsInChildren("aniplayer") as m4m.framework.aniplayer[];
         // for(let i=0; i<anipalyer.length; i++)
@@ -2957,6 +3309,9 @@ var test_loadprefab = /** @class */ (function () {
         CameraController.instance().init(this.app, this.camera);
         objCam.markDirty(); //标记为需要刷新
     };
+    /**
+     * 改变所有渲染节点的着色器
+     */
     test_loadprefab.prototype.changeShader = function () {
         var _this = this;
         var btn = document.createElement("button");
@@ -2978,6 +3333,10 @@ var test_loadprefab = /** @class */ (function () {
         btn2.style.position = "absolute";
         this.app.container.appendChild(btn2);
     };
+    /**
+     * 改变渲染节点的着色器
+     * @param sha 着色器
+     */
     test_loadprefab.prototype.change = function (sha) {
         for (var j = 0; j < this.renderer.length; j++) {
             for (var i = 0; i < this.renderer[j].materials.length; i++) {
@@ -3077,6 +3436,13 @@ var testReload = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 创建 GUI 按钮
+     * @param role 角色节点
+     * @param role1 角色1节点
+     * @param o2d overlay2D对象
+     * @param part 部件名
+     */
     testReload.prototype.createChangeBtn = function (role, role1, o2d, part) {
         var _this = this;
         //设置UI
@@ -3139,6 +3505,11 @@ var testReload = /** @class */ (function () {
             _this.excangeSub(r_a_part, r_b_part);
         }, this);
     };
+    /**
+     * 交换 部件
+     * @param r_a_part 部件a
+     * @param r_b_part 部件b
+     */
     testReload.prototype.excangeSub = function (r_a_part, r_b_part) {
         //交换位置
         var role_part_parent = r_a_part.gameObject.transform.parent;
@@ -3157,6 +3528,12 @@ var test_f4skin = /** @class */ (function () {
     function test_f4skin() {
         this.timer = 0;
     }
+    /**
+     * 骨骼配置
+     * @param bone 骨骼节点
+     * @param yOffset y的偏移
+     * @param rotate 旋转
+     */
     test_f4skin.prototype.boneConfig = function (bone, yOffset, rotate) {
         if (yOffset === void 0) { yOffset = 4; }
         if (rotate === void 0) { rotate = 10; }
@@ -3167,6 +3544,11 @@ var test_f4skin = /** @class */ (function () {
         // m4m.math.quatFromEulerAngles(0, 0, rotate, bone.localRotate);
         bone.markDirty();
     };
+    /**
+     * 组装骨骼数据
+     * @param segment 段落数
+     * @returns 节点列表
+     */
     test_f4skin.prototype.assembSkeleton = function (segment) {
         var bones = [];
         for (var i = 0; i < segment; i++) {
@@ -3185,6 +3567,11 @@ var test_f4skin = /** @class */ (function () {
         }
         return bones;
     };
+    /**
+     * 构建mesh
+     * @param ctx webgl 上下文
+     * @returns
+     */
     test_f4skin.prototype.createMesh = function (ctx) {
         var mesh = new m4m.framework.mesh();
         var NumVertsPerRow = 5;
@@ -3439,6 +3826,12 @@ var test_f4skin = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 旋转
+     * @param bone 骨骼节点
+     * @param valuey y值
+     * @param valuez z值
+     */
     test_f4skin.prototype.rotate = function (bone, valuey, valuez) {
         m4m.math.quatFromEulerAngles(0, valuey, valuez, bone.localRotate);
     };
@@ -3478,6 +3871,9 @@ var test_3DPhysics_baseShape = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_baseShape.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_floor = physics3dDemoTool.mats["white"];
@@ -3570,7 +3966,10 @@ var test_3DPhysics_compound = /** @class */ (function () {
             });
         });
     };
-    //创建一把 椅子
+    /**
+     * 创建一把 椅子
+     * @returns 椅子节点
+     */
     test_3DPhysics_compound.prototype.crateChair = function () {
         var chairTran = new m4m.framework.transform();
         m4m.math.vec3Set(chairTran.localPosition, 0, 3, 5);
@@ -3610,7 +4009,11 @@ var test_3DPhysics_compound = /** @class */ (function () {
         this.mrs.push(mr);
         return chairTran;
     };
-    /** 创建胶囊体 */
+    /**
+     * 创建胶囊体
+     * @param showCollisionMesh 显示碰撞mesh？
+     * @returns 胶囊体节点
+     */
     test_3DPhysics_compound.prototype.crateCapsule = function (showCollisionMesh) {
         if (showCollisionMesh === void 0) { showCollisionMesh = false; }
         var mat_activated = physics3dDemoTool.mats["activated"];
@@ -3658,6 +4061,9 @@ var test_3DPhysics_compound = /** @class */ (function () {
         this.mrs.push(mr);
         return combination;
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_compound.prototype.init = function () {
         //初始化 物理世界-----------------------
         this.scene.enablePhysics(new m4m.math.vector3(0, -9.8, 0), new m4m.framework.OimoJSPlugin());
@@ -3704,6 +4110,9 @@ var test_3DPhysics_compound = /** @class */ (function () {
         //GUI
         this.setGUI();
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_compound.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -3726,19 +4135,31 @@ var test_3DPhysics_compound = /** @class */ (function () {
         folderFun.add(this, 'impulseTarget');
         folderFun.add(this, 'applyReset');
     };
-    //重置
+    /**
+     * 重置 (调试GUI 中触发)
+     */
     test_3DPhysics_compound.prototype.applyReset = function () {
         physics3dDemoTool.resetObj(this.mrs);
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_compound.prototype.impulseTarget = function () {
         this.doImpulse(this.targetTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_compound.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
         phyImpostor.applyImpulse(this.force, pos);
     };
-    //移动 到射线点
+    /**
+     * 移动 到射线点
+     * @param param0 点坐标
+     */
     test_3DPhysics_compound.prototype.onPonitMove = function (_a) {
         var x = _a[0], y = _a[1];
         var viewPos = m4m.poolv2();
@@ -3806,6 +4227,9 @@ var test_3DPhysics_explode = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_explode.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_sleeping = physics3dDemoTool.mats["sleeping"];
@@ -3867,6 +4291,9 @@ var test_3DPhysics_explode = /** @class */ (function () {
         //GUI
         this.setGUI();
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_explode.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -3881,14 +4308,24 @@ var test_3DPhysics_explode = /** @class */ (function () {
         folderFun.add(this, 'doExplode');
         folderFun.add(this, 'applyReset');
     };
+    /**
+     * 重置demo物理状态
+     */
     test_3DPhysics_explode.prototype.applyReset = function () {
         physics3dDemoTool.resetObj(this.mrs);
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_explode.prototype.impulseTarget = function () {
         if (!this.targetTran)
             return;
         this.doImpulse(this.targetTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_explode.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
@@ -3897,7 +4334,11 @@ var test_3DPhysics_explode = /** @class */ (function () {
     test_3DPhysics_explode.prototype.doExplode = function () {
         this.explode(this.redSphere.localPosition);
     };
-    /** 移动 ↑ ↓ ← → 7 4  ， 爆炸 0 */
+    /**
+     * 按键按下 执行
+     * 移动 ↑ ↓ ← → 7 4  ， 爆炸 0
+     * @param param0 按键keycode
+     */
     test_3DPhysics_explode.prototype.keyDown = function (_a) {
         var keyCode = _a[0];
         switch (keyCode) {
@@ -3922,7 +4363,10 @@ var test_3DPhysics_explode = /** @class */ (function () {
         }
         this.redSphere.localPosition = this.redSphere.localPosition;
     };
-    /** 爆炸 */
+    /**
+     * 指定点施加 爆炸行为
+     * @param point 指定点
+     */
     test_3DPhysics_explode.prototype.explode = function (point) {
         var _this = this;
         if (!point)
@@ -3991,6 +4435,9 @@ var test_3DPhysics_freeze = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_freeze.prototype.init = function () {
         var _this = this;
         var mat_activated = physics3dDemoTool.mats["activated"];
@@ -4060,6 +4507,9 @@ var test_3DPhysics_freeze = /** @class */ (function () {
         //GUI
         this.setGUI();
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_freeze.prototype.setGUI = function () {
         var _this = this;
         if (!dat)
@@ -4090,10 +4540,16 @@ var test_3DPhysics_freeze = /** @class */ (function () {
         folderFun.add(this, 'applyFreezeOpt');
         folderFun.add(this, 'applyReset');
     };
+    /**
+     * 重置demo物理状态
+     */
     test_3DPhysics_freeze.prototype.applyReset = function () {
         physics3dDemoTool.resetObj(this.mrs);
     };
-    //执行冻结
+    /**
+     * 执行冻结
+     * @returns
+     */
     test_3DPhysics_freeze.prototype.applyFreezeOpt = function () {
         var _this = this;
         var phy = this.targetTran.physicsImpostor;
@@ -4105,15 +4561,25 @@ var test_3DPhysics_freeze = /** @class */ (function () {
             phy.setFreeze(o, b);
         });
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_freeze.prototype.impulseTarget = function () {
         this.doImpulse(this.targetTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_freeze.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
         phyImpostor.applyImpulse(this.force, pos);
     };
-    //移动 到射线点
+    /**
+     * 移动 到射线点
+     * @param param0 点坐标
+     */
     test_3DPhysics_freeze.prototype.onPonitMove = function (_a) {
         var x = _a[0], y = _a[1];
         var viewPos = m4m.poolv2();
@@ -4173,6 +4639,9 @@ var test_3DPhysics_joint_ballandSocket = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_joint_ballandSocket.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_sleeping = physics3dDemoTool.mats["sleeping"];
@@ -4230,6 +4699,9 @@ var test_3DPhysics_joint_ballandSocket = /** @class */ (function () {
         //GUI
         this.setGUI();
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_joint_ballandSocket.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -4251,13 +4723,22 @@ var test_3DPhysics_joint_ballandSocket = /** @class */ (function () {
         folderFun.add(this, 'impulseBox');
         folderFun.add(this, 'applyReset');
     };
-    //重置
+    /**
+     * 重置demo物理状态
+     */
     test_3DPhysics_joint_ballandSocket.prototype.applyReset = function () {
         physics3dDemoTool.resetObj(this.mrs);
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_joint_ballandSocket.prototype.impulseBox = function () {
         this.doImpulse(this.boxTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_joint_ballandSocket.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
@@ -4303,6 +4784,9 @@ var test_3DPhysics_joint_distance = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_joint_distance.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_sleeping = physics3dDemoTool.mats["sleeping"];
@@ -4360,6 +4844,9 @@ var test_3DPhysics_joint_distance = /** @class */ (function () {
         //GUI
         this.setGUI();
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_joint_distance.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -4381,13 +4868,22 @@ var test_3DPhysics_joint_distance = /** @class */ (function () {
         folderFun.add(this, 'impulseBox');
         folderFun.add(this, 'applyReset');
     };
-    //重置
+    /**
+     * 重置demo物理状态
+     */
     test_3DPhysics_joint_distance.prototype.applyReset = function () {
         physics3dDemoTool.resetObj(this.mrs);
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_joint_distance.prototype.impulseBox = function () {
         this.doImpulse(this.boxTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_joint_distance.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
@@ -4434,6 +4930,9 @@ var test_3DPhysics_joint_hinge = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_joint_hinge.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_sleeping = physics3dDemoTool.mats["sleeping"];
@@ -4504,6 +5003,9 @@ var test_3DPhysics_joint_hinge = /** @class */ (function () {
         //GUI
         this.setGUI();
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_joint_hinge.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -4525,13 +5027,22 @@ var test_3DPhysics_joint_hinge = /** @class */ (function () {
         folderFun.add(this, 'impulseBox');
         folderFun.add(this, 'applyReset');
     };
-    //重置
+    /**
+     * 重置demo物理状态
+     */
     test_3DPhysics_joint_hinge.prototype.applyReset = function () {
         physics3dDemoTool.resetObj(this.mrs);
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_joint_hinge.prototype.impulseBox = function () {
         this.doImpulse(this.boxTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_joint_hinge.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
@@ -4578,6 +5089,9 @@ var test_3DPhysics_joint_prismatic = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_joint_prismatic.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_sleeping = physics3dDemoTool.mats["sleeping"];
@@ -4644,6 +5158,9 @@ var test_3DPhysics_joint_prismatic = /** @class */ (function () {
         //GUI
         this.setGUI();
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_joint_prismatic.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -4664,9 +5181,16 @@ var test_3DPhysics_joint_prismatic = /** @class */ (function () {
         folderFun.open();
         folderFun.add(this, 'impulseBox');
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_joint_prismatic.prototype.impulseBox = function () {
         this.doImpulse(this.boxTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_joint_prismatic.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
@@ -4711,6 +5235,9 @@ var test_3DPhysics_joint_slider = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_joint_slider.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_sleeping = physics3dDemoTool.mats["sleeping"];
@@ -4767,6 +5294,9 @@ var test_3DPhysics_joint_slider = /** @class */ (function () {
         //GUI
         this.setGUI();
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_joint_slider.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -4787,9 +5317,16 @@ var test_3DPhysics_joint_slider = /** @class */ (function () {
         folderFun.open();
         folderFun.add(this, 'impulseBox');
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_joint_slider.prototype.impulseBox = function () {
         this.doImpulse(this.boxTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_joint_slider.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
@@ -4836,6 +5373,9 @@ var test_3DPhysics_joint_wheel = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_joint_wheel.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_sleeping = physics3dDemoTool.mats["sleeping"];
@@ -4875,7 +5415,9 @@ var test_3DPhysics_joint_wheel = /** @class */ (function () {
         //
         this.addDisplayObj();
     };
-    //辅助显示连接轴
+    /**
+     * 辅助显示连接轴
+     */
     test_3DPhysics_joint_wheel.prototype.addDisplayObj = function () {
         var mat_pole = physics3dDemoTool.mats["purple"];
         var diameter = 0.25;
@@ -4898,6 +5440,9 @@ var test_3DPhysics_joint_wheel = /** @class */ (function () {
         this.pole_1.addChild(_pole_1);
         physics3dDemoTool.attachMesh(_pole_1, mat_pole, "cube");
     };
+    /**
+     * 同步显示 旋转和缩放
+     */
     test_3DPhysics_joint_wheel.prototype.syncDisplayRT = function () {
         if (!this.boxTran || !this.pole)
             return;
@@ -4911,6 +5456,9 @@ var test_3DPhysics_joint_wheel = /** @class */ (function () {
         m4m.math.vec3Set(this.pole_1.localPosition, 0, bPos.y, 0);
         this.pole_1.localPosition = this.pole_1.localPosition;
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_joint_wheel.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -4931,9 +5479,16 @@ var test_3DPhysics_joint_wheel = /** @class */ (function () {
         folderFun.open();
         folderFun.add(this, 'impulseBox');
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_joint_wheel.prototype.impulseBox = function () {
         this.doImpulse(this.boxTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_joint_wheel.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
@@ -4977,6 +5532,9 @@ var test_3DPhysics_kinematic = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_kinematic.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_floor = physics3dDemoTool.mats["white"];
@@ -5026,6 +5584,11 @@ var test_3DPhysics_kinematic = /** @class */ (function () {
         //鼠标事件
         this.iptMgr.addPointListener(m4m.event.PointEventEnum.PointMove, this.onPonitMove, this);
     };
+    /**
+     * 当点移动
+     * @param param0 点坐标
+     * @returns
+     */
     test_3DPhysics_kinematic.prototype.onPonitMove = function (_a) {
         var x = _a[0], y = _a[1];
         var viewPos = m4m.poolv2();
@@ -5044,6 +5607,9 @@ var test_3DPhysics_kinematic = /** @class */ (function () {
         this.ctrBox.physicsImpostor.kinematicSetPosition(pos); //更新动力学 位置
         m4m.poolv2_del(viewPos);
     };
+    /**
+     * 更新旋转
+     */
     test_3DPhysics_kinematic.prototype.updateRoate = function () {
         if (!this.ctrBox)
             return;
@@ -5092,6 +5658,9 @@ var test_3DPhysics_motor_hinge = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_motor_hinge.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_sleeping = physics3dDemoTool.mats["sleeping"];
@@ -5145,6 +5714,9 @@ var test_3DPhysics_motor_hinge = /** @class */ (function () {
         //GUI
         this.setGUI();
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_motor_hinge.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -5167,14 +5739,24 @@ var test_3DPhysics_motor_hinge = /** @class */ (function () {
         folderFun.add(this, 'impulseBox');
         folderFun.add(this, 'changeMotorSpeed');
     };
+    /**
+     * 改变马达速度
+     */
     test_3DPhysics_motor_hinge.prototype.changeMotorSpeed = function () {
         if (!this.targetMotor)
             return;
         this.targetMotor.setMotor(this.motorSpeed);
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_motor_hinge.prototype.impulseBox = function () {
         this.doImpulse(this.boxTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_motor_hinge.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
@@ -5220,6 +5802,9 @@ var test_3DPhysics_motor_slider = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_motor_slider.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_sleeping = physics3dDemoTool.mats["sleeping"];
@@ -5278,6 +5863,9 @@ var test_3DPhysics_motor_slider = /** @class */ (function () {
         //GUI
         this.setGUI();
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_motor_slider.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -5300,14 +5888,25 @@ var test_3DPhysics_motor_slider = /** @class */ (function () {
         folderFun.add(this, 'impulseBox');
         folderFun.add(this, 'changeMotorSpeed');
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_motor_slider.prototype.impulseBox = function () {
         this.doImpulse(this.boxTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_motor_slider.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
         phyImpostor.applyImpulse(this.force, pos);
     };
+    /**
+     * 改变马达速度
+     * @returns
+     */
     test_3DPhysics_motor_slider.prototype.changeMotorSpeed = function () {
         if (!this.targetMotor)
             return;
@@ -5355,6 +5954,9 @@ var test_3DPhysics_motor_wheel = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_3DPhysics_motor_wheel.prototype.init = function () {
         var mat_activated = physics3dDemoTool.mats["activated"];
         var mat_sleeping = physics3dDemoTool.mats["sleeping"];
@@ -5397,7 +5999,9 @@ var test_3DPhysics_motor_wheel = /** @class */ (function () {
         //
         this.addDisplayObj();
     };
-    //辅助显示连接轴
+    /**
+     * 辅助显示连接轴
+     */
     test_3DPhysics_motor_wheel.prototype.addDisplayObj = function () {
         var mat_pole = physics3dDemoTool.mats["purple"];
         var diameter = 0.25;
@@ -5420,6 +6024,9 @@ var test_3DPhysics_motor_wheel = /** @class */ (function () {
         this.pole_1.addChild(_pole_1);
         physics3dDemoTool.attachMesh(_pole_1, mat_pole, "cube");
     };
+    /**
+     * 同步显示 旋转和缩放
+     */
     test_3DPhysics_motor_wheel.prototype.syncDisplayRT = function () {
         if (!this.boxTran || !this.pole)
             return;
@@ -5433,11 +6040,17 @@ var test_3DPhysics_motor_wheel = /** @class */ (function () {
         m4m.math.vec3Set(this.pole_1.localPosition, 0, bPos.y, 0);
         this.pole_1.localPosition = this.pole_1.localPosition;
     };
+    /**
+     * 改变马达速度
+     */
     test_3DPhysics_motor_wheel.prototype.changeMotorSpeed = function () {
         if (!this.targetMotor)
             return;
         this.targetMotor.setMotor(this.motorSpeed);
     };
+    /**
+     * 设置 调试GUI
+     */
     test_3DPhysics_motor_wheel.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -5460,9 +6073,16 @@ var test_3DPhysics_motor_wheel = /** @class */ (function () {
         folderFun.add(this, 'impulseBox');
         folderFun.add(this, 'changeMotorSpeed');
     };
+    /**
+     * 对目标施加冲量
+     */
     test_3DPhysics_motor_wheel.prototype.impulseBox = function () {
         this.doImpulse(this.boxTran.physicsImpostor);
     };
+    /**
+     * 标施加冲量
+     * @param phyImpostor 物理代理
+     */
     test_3DPhysics_motor_wheel.prototype.doImpulse = function (phyImpostor) {
         var pos = this.tempV3;
         m4m.math.vec3Add(phyImpostor.object.getWorldPosition(), this.contactlocalPoint, pos);
@@ -5560,6 +6180,16 @@ var test_AnimatedSprite = /** @class */ (function () {
             }
         }
     };
+    /**
+     * 获取 帧动画sprite列表
+     * @param texture 纹理
+     * @param x x
+     * @param y y
+     * @param width 宽
+     * @param height 高
+     * @param frameCount 帧数
+     * @returns sprite列表
+     */
     test_AnimatedSprite.prototype.getFrames = function (texture, x, y, width, height, frameCount) {
         var array = [];
         for (var i = 0; i < frameCount; i++) {
@@ -5628,6 +6258,9 @@ var test_CompressTexture = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 设置 调试GUI
+     */
     test_CompressTexture.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -5639,6 +6272,9 @@ var test_CompressTexture = /** @class */ (function () {
         //方法
         gui.add(this, "changeTexture").name("\u52A0\u8F7D\u66FF\u6362\u7EB9\u7406");
     };
+    /**
+     * 改变纹理
+     */
     test_CompressTexture.prototype.changeTexture = function () {
         return __awaiter(this, void 0, void 0, function () {
             var file, tex, mat;
@@ -5699,6 +6335,7 @@ var test_Decal = /** @class */ (function () {
             });
         });
     };
+    /** 初始化 */
     test_Decal.prototype.init = function () {
         this.initCamera();
         //建筑
@@ -5727,6 +6364,9 @@ var test_Decal = /** @class */ (function () {
         ;
         gui.add(this, 'dec');
     };
+    /**
+     * 初始化相机
+     */
     test_Decal.prototype.initCamera = function () {
         //相机-----------------------------------
         var objCam = new m4m.framework.transform();
@@ -5830,6 +6470,9 @@ var test_GPU_instancing = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 合批切换
+     */
     test_GPU_instancing.prototype.batcherSwitch = function () {
         this._batcher = !this._batcher;
         if (this._batcher) {
@@ -5850,6 +6493,9 @@ var test_GPU_instancing = /** @class */ (function () {
         }
         this._scene.refreshGpuInstancBatcher();
     };
+    /**
+     * 刷新
+     */
     test_GPU_instancing.prototype.refresh = function () {
         this.cubeRoot.removeAllChild();
         this.cubeRoot.gameObject.isStatic = this.isStatic;
@@ -5889,6 +6535,10 @@ var test_GPU_instancing = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    /**
+     * 加载资源
+     * @param modelName 模型名
+     */
     test_GPU_instancing.prototype.loadTest = function (modelName) {
         return __awaiter(this, void 0, void 0, function () {
             var url, m, count, range, i, tran, mrs;
@@ -5926,6 +6576,10 @@ var test_GPU_instancing = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 创建指定数量
+     * @param num 数量
+     */
     test_GPU_instancing.prototype.createByNum = function (num) {
         if (num < 1)
             num = 1;
@@ -5935,6 +6589,9 @@ var test_GPU_instancing = /** @class */ (function () {
             count++;
         }
     };
+    /**
+     * 实例化 切换
+     */
     test_GPU_instancing.prototype.instanceSwitch = function () {
         var _this = this;
         this.isInstancing = !this.isInstancing;
@@ -5942,11 +6599,19 @@ var test_GPU_instancing = /** @class */ (function () {
             v.enableGpuInstancing = _this.isInstancing;
         });
     };
+    /**
+     * 初始化材质
+     */
     test_GPU_instancing.prototype.initMaterails = function () {
         this._mat_ins = new m4m.framework.material("GPU_Instancing");
         this.instanceShBase = this._app.getAssetMgr().getShader("demo_gpu_instancing.shader.json");
         this._mat_ins.setShader(this.instanceShBase);
     };
+    /**
+     * 创建一个
+     * @param app 引擎app
+     * @param needInstance 需要GPUInstance
+     */
     test_GPU_instancing.prototype.createOne = function (app, needInstance) {
         var obj = m4m.framework.TransformUtil.CreatePrimitive(m4m.framework.PrimitiveType.Cube, app);
         obj.gameObject.transform.enableCulling = false;
@@ -5971,6 +6636,11 @@ var test_GPU_instancing = /** @class */ (function () {
         this.mats.push(mr.materials[0]);
         this.mrArr.push(mr);
     };
+    /**
+     * 注视相机
+     * @param trans  节点
+     * @returns
+     */
     test_GPU_instancing.prototype.lookAtCamera = function (trans) {
         if (!this.cam)
             return;
@@ -5981,6 +6651,11 @@ var test_GPU_instancing = /** @class */ (function () {
         m4m.math.quat2Lookat(trans.getWorldPosition(), camPos, tempQuat);
         trans.setWorldRotate(tempQuat);
     };
+    /**
+     * 获取随机数
+     * @param range 范围值
+     * @returns 数
+     */
     test_GPU_instancing.prototype.getRandom = function (range) {
         return range * Math.random() * (Math.random() > 0.5 ? 1 : -1);
     };
@@ -6018,6 +6693,10 @@ var gpuInstanceMgr = /** @class */ (function () {
             }
         }
     };
+    /**
+     * 填充参数
+     * @param mat 材质
+     */
     gpuInstanceMgr.fillParameters = function (mat) {
         var staMap = mat.statedMapUniforms;
         for (var key in staMap) {
@@ -6032,6 +6711,11 @@ var gpuInstanceMgr = /** @class */ (function () {
             }
         }
     };
+    /**
+     * 检查能否 使用 GPUInstance
+     * @param mat 材质
+     * @returns 能使用？
+     */
     gpuInstanceMgr.ckCanUseGpuInstance = function (mat) {
         if (!mat)
             return false;
@@ -6136,6 +6820,12 @@ var HDR_sample = /** @class */ (function () {
         this.ModelList = [];
         this._enableLight = true;
     }
+    /**
+     * 加载资源
+     * @param path 路径
+     * @param type 类型
+     * @returns 返回资源Promise
+     */
     HDR_sample.prototype._load = function (path, type) {
         var _this = this;
         if (type === void 0) { type = m4m.framework.AssetTypeEnum.Auto; }
@@ -6149,6 +6839,13 @@ var HDR_sample = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 加载资源
+     * @param path 路径
+     * @param name 名
+     * @param type 类型
+     * @returns 返回资源Promise
+     */
     HDR_sample.prototype.load = function (path, name, type) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -6161,6 +6858,12 @@ var HDR_sample = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 加载cube纹理
+     * @param folder 文件夹
+     * @param images 纹理资源名列表
+     * @returns Promise  CubeTexture
+     */
     HDR_sample.prototype.loadCubeTexture = function (folder, images) {
         if (images === void 0) { images = [
             'negx.hdr',
@@ -6235,6 +6938,10 @@ var HDR_sample = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 加载GLTF
+     * @param gltfModels gltf模型 url
+     */
     HDR_sample.prototype.toLoadGLTF = function (gltfModels) {
         var _a;
         return __awaiter(this, void 0, void 0, function () {
@@ -6413,6 +7120,9 @@ var HDR_sample = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 启用GUI
+     */
     HDR_sample.prototype.enableGUI = function () {
         return __awaiter(this, void 0, void 0, function () {
             var gui;
@@ -6453,6 +7163,9 @@ var HDR_sample = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    /**
+     * 加载
+     */
     HDR_sample.prototype.toLoad = function () {
         this.clearGLTF();
         if (!this._Model) {
@@ -6511,6 +7224,9 @@ var HDR_sample = /** @class */ (function () {
         }
         this.toLoadGLTF([model]);
     };
+    /**
+     * 清理GLTF
+     */
     HDR_sample.prototype.clearGLTF = function () {
         this.lightRoot.removeAllChild();
         this.modelRoot.removeAllChild();
@@ -6747,6 +7463,17 @@ var test_Heightmap_terrain_v2 = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 设置地形材质
+     * @param mtr 材质
+     * @param heightMax 最大高度
+     * @param heightMap 高度图
+     * @param splatCtr 画笔控制图
+     * @param splat0 笔画纹理0
+     * @param splat1 笔画纹理1
+     * @param splat2 笔画纹理2
+     * @param splat3 笔画纹理3
+     */
     test_Heightmap_terrain_v2.prototype.setTerrainMaterial = function (mtr, heightMax, heightMap, splatCtr, splat0, splat1, splat2, splat3) {
         var assetMgr = m4m.framework.sceneMgr.app.getAssetMgr();
         //获取 高度图shader
@@ -6767,6 +7494,9 @@ var test_Heightmap_terrain_v2 = /** @class */ (function () {
         mtr.setVector4("_Splat2_ST", new m4m.math.vector4(26.7, 26.7, 0, 0));
         mtr.setVector4("_Splat3_ST", new m4m.math.vector4(26.7, 26.7, 0, 0));
     };
+    /**
+     * 保存数据
+     */
     test_Heightmap_terrain_v2.prototype.saveData = function () {
         var texs = this.texs;
         var dataCfg = { version: "1.0" };
@@ -6784,6 +7514,9 @@ var test_Heightmap_terrain_v2 = /** @class */ (function () {
         this.setTerrainMaterial(mtr, 200, rTd.heightMap, rTd.splatMap, texs[2], texs[3], texs[4], texs[5]);
         // this.setTerrainMaterial(mtr, 200, texs[0], texs[1], texs[2], texs[3], texs[4], texs[5]);
     };
+    /**
+     * 设置GUI
+     */
     test_Heightmap_terrain_v2.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -7020,6 +7753,16 @@ var test_Heightmap_terrain_v2 = /** @class */ (function () {
         }
         return _mesh;
     };
+    /**
+     * 生成mesh
+     * @param gl webgl上下文
+     * @param heightmap 高度图
+     * @param width 宽
+     * @param depth 深度
+     * @param segmentsW 段落宽
+     * @param segmentsH 段落高
+     * @returns 输出mesh
+     */
     test_Heightmap_terrain_v2.genMesh = function (gl, heightmap, width, depth, segmentsW, segmentsH) {
         if (width === void 0) { width = 1000; }
         if (depth === void 0) { depth = 1000; }
@@ -7135,6 +7878,9 @@ var test_LightMap = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 添加相机
+     */
     test_LightMap.prototype.addCam = function () {
         //添加一个摄像机
         //initCamera
@@ -7154,6 +7900,10 @@ var test_LightMap = /** @class */ (function () {
         hoverc.scaleSpeed = 0.1;
         hoverc.lookAtPoint = new m4m.math.vector3(0, 2.5, 0);
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_LightMap.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -7165,6 +7915,10 @@ var test_LightMap = /** @class */ (function () {
         //方法
         gui.add(this, "change").name("\u52A0\u8F7D\u66FF\u6362\u8D44\u6E90");
     };
+    /**
+     * 执行改变
+     * @returns  Promise
+     */
     test_LightMap.prototype.change = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _a, f, type;
@@ -7184,6 +7938,11 @@ var test_LightMap = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 加载到场景
+     * @param fileName 资源名
+     * @param type 类型
+     */
     test_LightMap.prototype.loadToScene = function (fileName, type) {
         return __awaiter(this, void 0, void 0, function () {
             var assetMgr, _a, pfb, node, _scene, _root;
@@ -7217,6 +7976,9 @@ var test_LightMap = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 清理场景
+     */
     test_LightMap.prototype.clearScene = function () {
         this.scene.getRoot().removeAllChild();
     };
@@ -7254,6 +8016,10 @@ var test_LineRenderer = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_LineRenderer.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -7261,6 +8027,9 @@ var test_LineRenderer = /** @class */ (function () {
         gui.add(this, 'loop');
         gui.add(this, 'viewcamera');
     };
+    /**
+     * 初始化
+     */
     test_LineRenderer.prototype.init = function () {
         //相机-----------------------------------
         var objCam = new m4m.framework.transform();
@@ -7283,6 +8052,9 @@ var test_LineRenderer = /** @class */ (function () {
         // this._showParticle(this._particles[0]);
         this.initLineRenderer();
     };
+    /**
+     * 初始化线渲染
+     */
     test_LineRenderer.prototype.initLineRenderer = function () {
         var tran = new m4m.framework.transform();
         tran.name = "LineRenderer";
@@ -7296,6 +8068,10 @@ var test_LineRenderer = /** @class */ (function () {
         //
         lr.positions = [new m4m.math.vector3(0, 0, 0), new m4m.math.vector3(1, 0, 0), new m4m.math.vector3(0, 1, 0),];
     };
+    /**
+     * 显示粒子
+     * @param res 资源
+     */
     test_LineRenderer.prototype._showParticle = function (res) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -7357,6 +8133,10 @@ var test_ParticleSystem = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_ParticleSystem.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -7368,6 +8148,9 @@ var test_ParticleSystem = /** @class */ (function () {
         gui.add(this, 'play');
         gui.add(this, 'stop');
     };
+    /**
+     * 播放
+     */
     test_ParticleSystem.prototype.play = function () {
         var _this = this;
         this._particle.gameObject.getComponentsInChildren("ParticleSystem").forEach(function (v) {
@@ -7378,6 +8161,9 @@ var test_ParticleSystem = /** @class */ (function () {
             }, _this);
         });
     };
+    /**
+     * 暂停播放
+     */
     test_ParticleSystem.prototype.stop = function () {
         this._particle.gameObject.getComponentsInChildren("ParticleSystem").forEach(function (v) {
             var ps = v;
@@ -7395,6 +8181,9 @@ var test_ParticleSystem = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    /**
+     * 初始化
+     */
     test_ParticleSystem.prototype.init = function () {
         //相机-----------------------------------
         var objCam = new m4m.framework.transform();
@@ -7417,6 +8206,10 @@ var test_ParticleSystem = /** @class */ (function () {
         this._showParticle(this._particles[0]);
         // this.initParticleSystem();
     };
+    /**
+     * 显示粒子
+     * @param res 资源
+     */
     test_ParticleSystem.prototype._showParticle = function (res) {
         return __awaiter(this, void 0, void 0, function () {
             var cubeP, cubeTran;
@@ -7649,6 +8442,9 @@ var test_Rvo2 = /** @class */ (function () {
         CameraController.instance().init(this.app, this.camera);
         this.init();
     };
+    /**
+     * 初始化
+     */
     test_Rvo2.prototype.init = function () {
         //加球
         var sphere = new m4m.framework.transform;
@@ -7697,6 +8493,12 @@ var test_Rvo2 = /** @class */ (function () {
             this.sim.doStep(); //走一步
         }
     };
+    /**
+     * 设置目标
+     * @param sim
+     * @param goals
+     * @returns
+     */
     test_Rvo2.prototype.reachedGoals = function (sim, goals) {
         for (var i = 0, len = sim.agents.length; i < len; i++) {
             if (RVO.Vector.absSq(RVO.Vector.subtract(sim.agents[i].position, goals[i])) > 1) {
@@ -7705,6 +8507,11 @@ var test_Rvo2 = /** @class */ (function () {
         }
         return true;
     };
+    /**
+     * 设置速度
+     * @param sim 管理器
+     * @param goals 目标列表
+     */
     test_Rvo2.prototype.setPreferredVelocities = function (sim, goals) {
         for (var i = 0, len = sim.agents.length; i < len; i++) {
             // 据当前目标重新获取目标方向向量
@@ -7715,6 +8522,10 @@ var test_Rvo2 = /** @class */ (function () {
             sim.agents[i].prefVelocity = goalVector; // 更新
         }
     };
+    /**
+     * 更新可视化
+     * @param sim 管理器
+     */
     test_Rvo2.prototype.updateVisualization = function (sim) {
         for (var i = 0; i < this.spheres.length; i++) {
             this.spheres[i].localTranslate.x = sim.agents[i].position[0];
@@ -7761,6 +8572,10 @@ var test_ShaderToy_Player = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_ShaderToy_Player.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -7772,6 +8587,9 @@ var test_ShaderToy_Player = /** @class */ (function () {
         //方法
         gui.add(this, "change").name("\u52A0\u8F7D\u66FF\u6362\u8D44\u6E90");
     };
+    /**
+     * 改变
+     */
     test_ShaderToy_Player.prototype.change = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -7787,6 +8605,10 @@ var test_ShaderToy_Player = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 加载到场景
+     * @param fileName 文件名
+     */
     test_ShaderToy_Player.prototype.loadToScene = function (fileName) {
         return __awaiter(this, void 0, void 0, function () {
             var url, sToyData, sToyNode, sToyPlayer;
@@ -7807,6 +8629,9 @@ var test_ShaderToy_Player = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 添加相机
+     */
     test_ShaderToy_Player.prototype.addCam = function () {
         var scene = m4m.framework.sceneMgr.scene;
         //添加一个摄像机
@@ -7827,6 +8652,9 @@ var test_ShaderToy_Player = /** @class */ (function () {
         hoverc.scaleSpeed = 0.1;
         hoverc.lookAtPoint = new m4m.math.vector3(0, 2.5, 0);
     };
+    /**
+     * 清理场景
+     */
     test_ShaderToy_Player.prototype.clearScene = function () {
         var scene = m4m.framework.sceneMgr.scene;
         scene.getRoot().removeAllChild();
@@ -7862,6 +8690,10 @@ var shaderToyData = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    /**
+     * 初始化
+     * @returns
+     */
     shaderToyData.init = function () {
         if (this._inited)
             return;
@@ -7873,6 +8705,11 @@ var shaderToyData = /** @class */ (function () {
         //
         this._stoyMesh = this.genSToyMesh();
     };
+    /**
+     * 加载
+     * @param resUrl 资源url
+     * @returns
+     */
     shaderToyData.Load = function (resUrl) {
         return __awaiter(this, void 0, void 0, function () {
             var loadRes, text, jsonObj, files, data, texts, textAssets, _textPs, textUrls, i, len, url, _p, result, Image, Common, CubeA, BufferA, BufferB, BufferC, BufferD, d_image, code;
@@ -7926,7 +8763,10 @@ var shaderToyData = /** @class */ (function () {
             });
         });
     };
-    /** 构建着色器 */
+    /**
+     * 构建着色器
+     * @param data 数据
+     */
     shaderToyData.makeShader = function (data) {
         var app = m4m.framework.sceneMgr.app;
         var gl = app.webgl;
@@ -7958,7 +8798,10 @@ var shaderToyData = /** @class */ (function () {
         //
         data._shader = sh;
     };
-    /** 生成 stoyMesh */
+    /**
+     * 生成 stoyMesh
+     * @returns mesh
+     */
     shaderToyData.genSToyMesh = function () {
         var data = new m4m.render.meshData();
         data.pos = [];
@@ -8057,6 +8900,10 @@ var shaderToyPlayer = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    /**
+     * 当点按下
+     * @param param0 点坐标
+     */
     shaderToyPlayer.prototype.onPointDown = function (_a) {
         var x = _a[0], y = _a[1];
         var h = m4m.framework.sceneMgr.app.height;
@@ -8064,6 +8911,10 @@ var shaderToyPlayer = /** @class */ (function () {
         m4m.math.vec4Set(this._iMouse, x, y, x, -y);
         this._pointIsDown = true;
     };
+    /**
+     * 当点移动
+     * @param param0 点坐标
+     */
     shaderToyPlayer.prototype.onPointMove = function (_a) {
         var x = _a[0], y = _a[1];
         this._pointIsDown = true;
@@ -8072,6 +8923,10 @@ var shaderToyPlayer = /** @class */ (function () {
         this._iMouse.x = x;
         this._iMouse.y = y;
     };
+    /**
+     * 当点点击
+     * @param param0 点坐标
+     */
     shaderToyPlayer.prototype.onPointClick = function (_a) {
         var x = _a[0], y = _a[1];
         var h = m4m.framework.sceneMgr.app.height;
@@ -8079,6 +8934,10 @@ var shaderToyPlayer = /** @class */ (function () {
         m4m.math.vec4Set(this._iMouse, x, y, x, y);
         this._pointIsClick = true;
     };
+    /**
+     * 设置鼠标点击
+     * @param _mouse
+     */
     shaderToyPlayer.prototype.setMouseClick = function (_mouse) {
         //
         var mzSign = Math.sign(_mouse.z);
@@ -8088,6 +8947,10 @@ var shaderToyPlayer = /** @class */ (function () {
         this._pointIsDown = false;
         this._pointIsClick = false;
     };
+    /**
+     * 设置数据
+     * @param _data 数据
+     */
     shaderToyPlayer.prototype.setDate = function (_data) {
         var date = new Date();
         var year = date.getFullYear(); // 年
@@ -8099,15 +8962,29 @@ var shaderToyPlayer = /** @class */ (function () {
         // return year + "-" + month + "-" + day + " " + hour + sign2 + minutes + sign2 + seconds;
         m4m.math.vec4Set(_data, year, month, day, hour * 3600 + minutes * 60 + seconds);
     };
+    /**
+     * 设置通道播放时间
+     * @param cPlayTime 播放时间
+     */
     shaderToyPlayer.prototype.setChannelPlayTime = function (cPlayTime) {
         cPlayTime[0] = 0;
         cPlayTime[1] = 0;
         cPlayTime[2] = 0;
         cPlayTime[3] = 0;
     };
+    /**
+     * 设置通道分辨率
+     * @param cRs
+     */
     shaderToyPlayer.prototype.setChannelResolution = function (cRs) {
         cRs.forEach(function (v, i) { cRs[i] = i; });
     };
+    /**
+     * 执行渲染
+     * @param context 渲染上下文
+     * @param assetmgr 资源管理器
+     * @param camera 相机
+     */
     shaderToyPlayer.prototype.render = function (context, assetmgr, camera) {
         if (!this._stoyData)
             return;
@@ -8142,6 +9019,9 @@ var shaderToyPlayer = /** @class */ (function () {
         mtr.draw(context, mesh, mesh.submesh[0], "base");
         //关闭FBO
     };
+    /**
+     * on播放
+     */
     shaderToyPlayer.prototype.onPlay = function () { };
     shaderToyPlayer.prototype.start = function () {
         var ipt = m4m.framework.sceneMgr.app.getInputMgr();
@@ -8151,6 +9031,9 @@ var shaderToyPlayer = /** @class */ (function () {
     };
     shaderToyPlayer.prototype.update = function (delta) {
     };
+    /**
+     * 移除
+     */
     shaderToyPlayer.prototype.remove = function () {
         //unreg event
         var ipt = m4m.framework.sceneMgr.app.getInputMgr();
@@ -8203,6 +9086,9 @@ var test_TrailRenderer = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 设置 GUI 控件
+     */
     test_TrailRenderer.prototype.setGUI = function () {
         if (!dat)
             return;
@@ -8210,6 +9096,9 @@ var test_TrailRenderer = /** @class */ (function () {
         gui.add(this, 'move');
         gui.add(this, 'viewcamera');
     };
+    /**
+     * 初始化函数
+     */
     test_TrailRenderer.prototype.init = function () {
         //相机-----------------------------------
         var objCam = new m4m.framework.transform();
@@ -8232,6 +9121,9 @@ var test_TrailRenderer = /** @class */ (function () {
         // this.initLineRenderer();
         this.loadRes(this.res);
     };
+    /**
+     * 初始化 LineRenderer
+     */
     test_TrailRenderer.prototype.initLineRenderer = function () {
         var tran = new m4m.framework.transform();
         tran.name = "TrailRenderer";
@@ -8243,6 +9135,10 @@ var test_TrailRenderer = /** @class */ (function () {
         //
         this.lr = lr;
     };
+    /**
+     * 加载资源
+     * @param res 资源名称
+     */
     test_TrailRenderer.prototype.loadRes = function (res) {
         return __awaiter(this, void 0, void 0, function () {
             var cubeP, cubeTran;
@@ -8627,6 +9523,9 @@ var test_UIGuideMask = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_UIGuideMask.prototype.init = function () {
         var _this = this;
         //遮挡模板 
@@ -8746,6 +9645,10 @@ var test_UI_Attach3D = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 创建Spine动画
+     * @param root 根节点
+     */
     test_UI_Attach3D.prototype.createSpines = function (root) {
         var app = m4m.framework.sceneMgr.app;
         var assetMgr = app.getAssetMgr();
@@ -8867,6 +9770,9 @@ var test_UI_Attach3D = /** @class */ (function () {
         configurable: true
     });
     ;
+    /**
+     * 设置GUI控件
+     */
     test_UI_Attach3D.prototype.setGUI = function () {
         return __awaiter(this, void 0, void 0, function () {
             var gui, app;
@@ -8941,7 +9847,11 @@ var test_UI_Texture_Array = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
-    //加载altas
+    /**
+     * 加载altas
+     * @param resName 资源名
+     * @returns
+     */
     test_UI_Texture_Array.prototype.loadAtlas = function (resName) {
         return __awaiter(this, void 0, void 0, function () {
             var imgFile, jsonFile, _img, _atlas;
@@ -8962,7 +9872,10 @@ var test_UI_Texture_Array = /** @class */ (function () {
             });
         });
     };
-    //切换UI 模式
+    /**
+     * 切换UI 模式
+     * @param texArrayMode 纹理数组 模式？
+     */
     test_UI_Texture_Array.prototype.switchUIMode = function (texArrayMode) {
         var _this = this;
         this.textureArrayRoot.visible = false;
@@ -8990,7 +9903,9 @@ var test_UI_Texture_Array = /** @class */ (function () {
             });
         }
     };
-    //随机创建UI节点
+    /**
+     * 随机创建UI节点
+     */
     test_UI_Texture_Array.prototype.randomMakeUI = function () {
         //随机创建 UI
         var count = this.makeUICount;
@@ -9024,7 +9939,13 @@ var test_UI_Texture_Array = /** @class */ (function () {
             _loop_2(i);
         }
     };
-    //创建普通UI
+    /**
+     * 创建普通UI
+     * @param sp sprite资源
+     * @param w 宽
+     * @param h 高
+     * @returns UI节点
+     */
     test_UI_Texture_Array.prototype.makeUI = function (sp, w, h) {
         var result = m4m.framework.TransformUtil.Create2DPrimitive(m4m.framework.Primitive2DType.Image2D);
         var img = result.getComponent("image2D");
@@ -9034,7 +9955,14 @@ var test_UI_Texture_Array = /** @class */ (function () {
         m4m.math.vec2SetAll(result.pivot, 0.5);
         return result;
     };
-    //创建纹理数组模式UI
+    /**
+     * 创建纹理数组模式UI
+     * @param sp sprite资源
+     * @param w 宽
+     * @param h 高
+     * @param texIndex 纹理索引
+     * @returns
+     */
     test_UI_Texture_Array.prototype.makeTexArrayUI = function (sp, w, h, texIndex) {
         if (texIndex === void 0) { texIndex = 0; }
         var result = new m4m.framework.transform2D();
@@ -9047,7 +9975,10 @@ var test_UI_Texture_Array = /** @class */ (function () {
         m4m.math.vec2SetAll(result.pivot, 0.5);
         return result;
     };
-    //创建shader
+    /**
+     * 创建shader
+     * @returns 着色器
+     */
     test_UI_Texture_Array.prototype.makeTexArraySahder = function () {
         var shKey = "texArrayImg";
         var sh = new m4m.framework.shader(this.texArrShaderName);
@@ -9094,7 +10025,10 @@ var test_UI_Texture_Array = /** @class */ (function () {
         //----------------------------------------------------
         return sh;
     };
-    //从assetMgr 获取需要的 htmlImage 图片 （取巧操作 ，整合到引擎需要调整）
+    /**
+     * 从assetMgr 获取需要的 htmlImage 图片 （取巧操作 ，整合到引擎需要调整）
+     * @returns html image 对象
+     */
     test_UI_Texture_Array.prototype.getHtmlImageMap = function () {
         var _limit = {};
         var _map = {};
@@ -9117,7 +10051,11 @@ var test_UI_Texture_Array = /** @class */ (function () {
         }
         return _map;
     };
-    //创建texture2D 纹理
+    /**
+     * 创建texture2D 纹理
+     * @param texMap 纹理字典
+     * @returns 纹理
+     */
     test_UI_Texture_Array.prototype.makeTex2dArray = function (texMap) {
         var texs = [];
         for (var i = 0, len = this.atlasNames.length; i < len; i++) {
@@ -9130,6 +10068,10 @@ var test_UI_Texture_Array = /** @class */ (function () {
         result.glTexture = glTex;
         return result;
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_UI_Texture_Array.prototype.setGUI = function () {
         return __awaiter(this, void 0, void 0, function () {
             var app, obj, gui;
@@ -9418,7 +10360,9 @@ var texArrImage2D = /** @class */ (function () {
             canvas.pushRawData(mat, this.datar);
         }
     };
-    //资源管理器中寻找 指定的贴图资源
+    /**
+     * 资源管理器中寻找 指定的贴图资源
+     */
     texArrImage2D.prototype.searchTexture = function () {
         if (this._sprite)
             return;
@@ -9462,7 +10406,6 @@ var texArrImage2D = /** @class */ (function () {
         this.transform = null;
     };
     /**
-     * @private
      * 根据显示方式来准备数据
      */
     texArrImage2D.prototype.prepareData = function () {
@@ -9481,7 +10424,7 @@ var texArrImage2D = /** @class */ (function () {
         ];
     };
     /**
-     * @private
+     * 更新 变换组件
      */
     texArrImage2D.prototype.updateTran = function () {
         var m = this.transform.getWorldMatrix();
@@ -9541,7 +10484,6 @@ var texArrImage2D = /** @class */ (function () {
         m4m.poolv2_del(maxPos);
     };
     /**
-     * @private
      * 更新quad的顶点数据
      */
     texArrImage2D.prototype.updateQuadData = function (x0, y0, x1, y1, x2, y2, x3, y3, quadIndex, mirror) {
@@ -9578,7 +10520,6 @@ var texArrImage2D = /** @class */ (function () {
         }
     };
     /**
-     * @private
      * 更新常规数据
      */
     texArrImage2D.prototype.updateSimpleData = function (x0, y0, x1, y1, x2, y2, x3, y3) {
@@ -9601,12 +10542,19 @@ var texArrImage2D = /** @class */ (function () {
     ], texArrImage2D);
     return texArrImage2D;
 }());
+/**
+ * 2D 数组纹理
+ */
 var tex2DArray = /** @class */ (function () {
     function tex2DArray(w, h) {
         this.width = w;
         this.height = h;
         this.texture = m4m.framework.sceneMgr.app.webgl.createTexture();
     }
+    /**
+     * 上传纹理到 webgl API
+     * @param texs html 纹理数据列表
+     */
     tex2DArray.prototype.uploadImage = function (texs) {
         if (!texs || texs.length < 1)
             return;
@@ -9628,11 +10576,23 @@ var tex2DArray = /** @class */ (function () {
         }
         gl.bindTexture(gl.TEXTURE_2D_ARRAY, null);
     };
+    /**
+     * 是FBO ？
+     * @returns
+     */
     tex2DArray.prototype.isFrameBuffer = function () {
         return false;
     };
+    /**
+     * 销毁
+     * @param webgl
+     */
     tex2DArray.prototype.dispose = function (webgl) {
     };
+    /**
+     * 计算内存中的数据长度
+     * @returns 数据长度
+     */
     tex2DArray.prototype.caclByteLength = function () {
         return 0;
     };
@@ -9670,6 +10630,9 @@ var test_UI_Component = /** @class */ (function () {
             });
         });
     };
+    /**
+    * 设置GUI控件
+    */
     test_UI_Component.prototype.createUI = function (astState, state) {
         var atlasComp = this.assetMgr.getAssetByName("comp.atlas.json");
         var tex_0 = this.assetMgr.getAssetByName("zg03_256.png");
@@ -10032,6 +10995,11 @@ var test_UI_Component = /** @class */ (function () {
         lab.font = font;
         target.addChild(lab_t);
     };
+    /**
+     * 加载纹理
+     * @param lastState
+     * @param state 状态
+     */
     test_UI_Component.prototype.loadTexture = function (lastState, state) {
         var _this = this;
         //加载图片资源
@@ -10061,6 +11029,11 @@ var test_UI_Component = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载图集资源
+     * @param lastState
+     * @param state 状态
+     */
     test_UI_Component.prototype.loadAtlas = function (lastState, state) {
         var abName = "".concat(this.emoji, ".assetbundle.json");
         var abPath = "".concat(resRootPath, "atlas/").concat(this.emoji, "/").concat(abName);
@@ -10075,6 +11048,9 @@ var test_UI_Component = /** @class */ (function () {
     test_UI_Component.prototype.update = function (delta) {
         this.taskmgr.move(delta); //推进task
     };
+    /**
+     * 测试
+     */
     test_UI_Component.prototype.testFun = function () {
         var lab = test_UI_Component["lab"];
         var datater = lab["datar"];
@@ -10142,8 +11118,21 @@ var test_WFC2D_base = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    /**
+     * 设置 大于0的整数 值
+     * @param val 值
+     * @returns 返回值
+     */
     test_WFC2D_base.prototype.setVal = function (val) { return Math.floor(val < 1 ? 1 : val); };
+    /**
+     * 设置瓦片尺寸
+     * @param val 尺寸
+     */
     test_WFC2D_base.prototype.setTileSize = function (val) { this._tileSize = this.setVal(val); this.tileSize = this._tileSize; };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_WFC2D_base.prototype.setGUI = function () {
         return __awaiter(this, void 0, void 0, function () {
             var app, obj, gui, wfcPs;
@@ -10189,6 +11178,11 @@ var test_WFC2D_base = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 获取WFC 资源
+     * @param res 资源名
+     * @returns 返回的 Promise<> 异步资源
+     */
     test_WFC2D_base.prototype.getWFCRes = function (res) {
         return __awaiter(this, void 0, void 0, function () {
             var textRes, jsonObj;
@@ -10300,6 +11294,12 @@ var test_WFC2D_base = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 通过 raw纹理数据 创建 背景图
+     * @param wfc2dReslutMap wfc 计算输出的结果数据
+     * @param imgURLs raw纹理 url 链接列表
+     * @param imgNames raw纹理 名 列表
+     */
     test_WFC2D_base.prototype.makeBGByRawImg = function (wfc2dReslutMap, imgURLs, imgNames) {
         return __awaiter(this, void 0, void 0, function () {
             var imgs, imgNameResMap, i, len, genBG;
@@ -10323,6 +11323,11 @@ var test_WFC2D_base = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 通过 raw纹理 创建 背景图
+     * @param wfc2dReslutMap wfc 计算输出的结果数据
+     * @param imgURLs raw纹理 url 链接列表
+     */
     test_WFC2D_base.prototype.makeBGByImg = function (wfc2dReslutMap, imgURLs) {
         return __awaiter(this, void 0, void 0, function () {
             var atlas, sps, imgNameResMap, hasSetTileSize, key, element, genBG;
@@ -10352,6 +11357,9 @@ var test_WFC2D_base = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 清理历史
+     */
     test_WFC2D_base.prototype.releaseHistory = function () {
         this.bgRoot.removeAllChild(true);
     };
@@ -10468,6 +11476,11 @@ var t;
             this.angularVelocity = new m4m.math.vector3(10, 0, 0);
             this.eulerAngle = m4m.math.pool.new_vector3();
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 加载状态
+         */
         test_blend.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("".concat(resRootPath, "shader/shader.assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -10475,6 +11488,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载文本字符串
+         * @param laststate
+         * @param state 加载状态
+         */
         test_blend.prototype.loadText = function (laststate, state) {
             var t = 2;
             this.app.getAssetMgr().load("".concat(resRootPath, "texture/zg256.png"), m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -10500,6 +11518,9 @@ var t;
                 }
             });
         };
+        /**
+         * 添加相机
+         */
         test_blend.prototype.addcam = function () {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -10512,6 +11533,9 @@ var t;
             objCam.lookatPoint(new m4m.math.vector3(0, 0, 0));
             objCam.markDirty(); //标记为需要刷新
         };
+        /**
+         * 添加地板
+         */
         test_blend.prototype.addplane = function () {
             {
                 var background = new m4m.framework.transform();
@@ -10624,6 +11648,9 @@ var test_ETC1_KTX = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 初始化
+     */
     test_ETC1_KTX.prototype.init = function () {
         //相机-----------------------------------
         var objCam = new m4m.framework.transform();
@@ -10638,6 +11665,9 @@ var test_ETC1_KTX = /** @class */ (function () {
         objCam.lookatPoint(new m4m.math.vector3(0, 0, 0));
         this.loadPrefabs();
     };
+    /**
+     * 加载所有预制体
+     */
     test_ETC1_KTX.prototype.loadPrefabs = function () {
         return __awaiter(this, void 0, void 0, function () {
             var res, cubeP, cubeTran;
@@ -10755,6 +11785,11 @@ var test_gltf_animation = /** @class */ (function () {
     function test_gltf_animation() {
         this.taskmgr = new m4m.framework.taskMgr();
     }
+    /**
+     * 加载着色器
+     * @param laststate
+     * @param state 加载状态
+     */
     test_gltf_animation.prototype.loadShader = function (laststate, state) {
         this.app.getAssetMgr().load("".concat(resRootPath, "shader/shader.assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (s) {
             if (s.isfinish) {
@@ -10762,6 +11797,11 @@ var test_gltf_animation = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载资源 prefab
+     * @param laststate
+     * @param state 加载状态
+     */
     test_gltf_animation.prototype.loadLongPrefab = function (laststate, state) {
         var _this = this;
         var settring = ["elong", "Run"];
@@ -10785,6 +11825,11 @@ var test_gltf_animation = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 添加相机
+     * @param laststate
+     * @param state 加载状态
+     */
     test_gltf_animation.prototype.addCamera = function (laststate, state) {
         //添加一个摄像机
         var objCam = new m4m.framework.transform();
@@ -10842,6 +11887,9 @@ var test_keyFrameAni = /** @class */ (function () {
             .then(function () { return _this.loadAsset(); })
             .then(function () { return _this.addbtns(); });
     };
+    /**
+     * 添加相机
+     */
     test_keyFrameAni.prototype.addCamera = function () {
         //添加一个摄像机
         var objCam = new m4m.framework.transform();
@@ -10853,6 +11901,10 @@ var test_keyFrameAni = /** @class */ (function () {
         camera.far = 10000;
         CameraController.instance().init(this.app, camera);
     };
+    /**
+     * 加载资源
+     * @returns 资源 Promise
+     */
     test_keyFrameAni.prototype.loadAsset = function () {
         var _this = this;
         return util.loadModel(this.app.getAssetMgr(), "PF_PlayerSharkAlien")
@@ -10866,6 +11918,9 @@ var test_keyFrameAni = /** @class */ (function () {
             _this.cameraNode.markDirty();
         });
     };
+    /**
+     * 添加按钮
+     */
     test_keyFrameAni.prototype.addbtns = function () {
         var _this = this;
         this.addbtn("play", 10, 100, function () {
@@ -10882,6 +11937,13 @@ var test_keyFrameAni = /** @class */ (function () {
             aniPlayer.rewind();
         });
     };
+    /**
+     * 添加按钮
+     * @param text  文本字符
+     * @param x x值
+     * @param y y值
+     * @param func 函数
+     */
     test_keyFrameAni.prototype.addbtn = function (text, x, y, func) {
         var btn = document.createElement("button");
         btn.textContent = text;
@@ -10960,6 +12022,14 @@ var testLiChangeMesh = /** @class */ (function () {
         var o2d = new m4m.framework.overlay2D();
         this.camera.addOverLay(o2d);
     };
+    /**
+     * 创建改变按钮
+     * @param role 节点0
+     * @param role1 节点1
+     * @param o2d 覆盖层
+     * @param part
+     * @param part2
+     */
     testLiChangeMesh.prototype.createChangeBtn = function (role, role1, o2d, part, part2) {
         var _this = this;
         var t2d_9 = new m4m.framework.transform2D();
@@ -11050,11 +12120,21 @@ var t;
             this.timer = 0;
             this.taskmgr = new m4m.framework.taskMgr();
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 资源状态
+         */
         test_rendertexture.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 state.finish = true;
             });
         };
+        /**
+         * 加载文本字符串
+         * @param laststate
+         * @param state 资源状态
+         */
         test_rendertexture.prototype.loadText = function (laststate, state) {
             this.app.getAssetMgr().load("res/zg256.png", m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -11065,6 +12145,11 @@ var t;
                 }
             });
         };
+        /**
+         * 初始化场景
+         * @param laststate
+         * @param state 资源状态
+         */
         test_rendertexture.prototype.initscene = function (laststate, state) {
             {
                 //camera1
@@ -11113,6 +12198,11 @@ var t;
             }
             state.finish = true;
         };
+        /**
+         * 添加在UI上的3d模型
+         * @param laststate
+         * @param state 资源状态
+         */
         test_rendertexture.prototype.add3dmodelbeforeUi = function (laststate, state) {
             {
                 var modelcam = new m4m.framework.transform();
@@ -11458,6 +12548,13 @@ var test_load_draco = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 获取解码索引
+     * @param draco draco
+     * @param decoder 解码器
+     * @param dracoGeometry draco几何体
+     * @returns decodeIndex
+     */
     test_load_draco.prototype.getDecodeIndex = function (draco, decoder, dracoGeometry) {
         var numFaces = dracoGeometry.num_faces();
         var numIndices = numFaces * 3;
@@ -11468,6 +12565,16 @@ var test_load_draco = /** @class */ (function () {
         draco._free(ptr);
         return { array: index, itemSize: 1 };
     };
+    /**
+     * 获取解码属性
+     * @param draco draco
+     * @param decoder 解码器
+     * @param dracoGeometry draco几何体
+     * @param attributeName 属性名
+     * @param attributeType 属性类型
+     * @param attribute 属性
+     * @returns 解码属性
+     */
     test_load_draco.prototype.getDecodeAttribute = function (draco, decoder, dracoGeometry, attributeName, attributeType, attribute) {
         var numComponents = attribute.num_components();
         var numPoints = dracoGeometry.num_points();
@@ -11484,6 +12591,11 @@ var test_load_draco = /** @class */ (function () {
             itemSize: numComponents
         };
     };
+    /**
+     * 获取draco数据类型
+     * @param draco draco
+     * @param attributeType 属性类型
+     */
     test_load_draco.prototype.getDracoDataType = function (draco, attributeType) {
         switch (attributeType) {
             case Float32Array: return draco.DT_FLOAT32;
@@ -11505,6 +12617,11 @@ var demo;
         function DragonTest() {
             this.taskmgr = new m4m.framework.taskMgr();
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 加载状态
+         */
         DragonTest.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("".concat(resRootPath, "shader/shader.assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -11512,6 +12629,11 @@ var demo;
                 }
             });
         };
+        /**
+         * 加载 模型资源
+         * @param laststate
+         * @param state 加载状态
+         */
         DragonTest.prototype.loadLongPrefab = function (laststate, state) {
             var _this = this;
             var resName = "long";
@@ -11538,6 +12660,11 @@ var demo;
                 }
             });
         };
+        /**
+         * 添加相机和光源
+         * @param laststate
+         * @param state 加载状态
+         */
         DragonTest.prototype.addCameraAndLight = function (laststate, state) {
             var tranCam = new m4m.framework.transform();
             tranCam.name = "Cam";
@@ -11618,6 +12745,11 @@ var test_navMesh = /** @class */ (function () {
         //navMgr init
         this.navmeshMgr = m4m.framework.NavMeshLoadManager.Instance;
     };
+    /**
+     * 加载场景
+     * @param assetName 资源名
+     * @param isCompress 是压缩模式
+     */
     test_navMesh.prototype.loadScene = function (assetName, isCompress) {
         var _this = this;
         if (isCompress === void 0) { isCompress = false; }
@@ -11664,6 +12796,10 @@ var test_navMesh = /** @class */ (function () {
             });
         }
     };
+    /**
+     * 拾取点下
+     * @returns
+     */
     test_navMesh.prototype.pickDown = function () {
         var navTrans = this.navmeshMgr.navTrans;
         var navmesh = this.navmeshMgr.navMesh;
@@ -11700,6 +12836,10 @@ var test_navMesh = /** @class */ (function () {
             this.drawLine(arr);
         }
     };
+    /**
+     * 绘制线
+     * @param points 线点列表
+     */
     test_navMesh.prototype.drawLine = function (points) {
         if (this.lastLine) {
             this.lastLine.gameObject.visible = false;
@@ -11720,6 +12860,11 @@ var test_navMesh = /** @class */ (function () {
         this.scene.addChild(this.lastLine);
         this.lastLine.markDirty();
     };
+    /**
+     * 生成mesh
+     * @param points 线点列表
+     * @returns mesh
+     */
     test_navMesh.prototype.genMesh = function (points) {
         var meshD = new m4m.render.meshData();
         meshD.pos = [];
@@ -11754,6 +12899,10 @@ var test_navMesh = /** @class */ (function () {
         }
         return _mesh;
     };
+    /**
+     * 创建所有点
+     * @param count 数量
+     */
     test_navMesh.prototype.createAllPoint = function (count) {
         this.points.forEach(function (element) {
             if (element)
@@ -11766,6 +12915,14 @@ var test_navMesh = /** @class */ (function () {
             }
         }
     };
+    /**
+     * 设置点
+     * @param index 索引
+     * @param x x值
+     * @param y y值
+     * @param z z值
+     * @param color 颜色
+     */
     test_navMesh.prototype.setPoint = function (index, x, y, z, color) {
         var cube = this.points[index];
         cube.localTranslate.x = x;
@@ -11788,6 +12945,9 @@ var test_navMesh = /** @class */ (function () {
         mf.mesh.glMesh.uploadVertexSubData(this.app.webgl, v32);
         cube.gameObject.visible = true;
     };
+    /**
+     * 生成点
+     */
     test_navMesh.prototype.generatePoint = function () {
         var cube = new m4m.framework.transform;
         var mf = cube.gameObject.addComponent("meshFilter");
@@ -11921,6 +13081,11 @@ var test_pbr = /** @class */ (function () {
         this.taskmgr.addTaskCall(this.loadpbrRes4.bind(this));
         this.taskmgr.addTaskCall(this.init.bind(this));
     };
+    /**
+     * 初始化
+     * @param astState
+     * @param state 状态
+     */
     test_pbr.prototype.init = function (astState, state) {
         var temp1 = new m4m.framework.transform();
         this.scene.addChild(temp1);
@@ -12008,6 +13173,11 @@ var test_pbr = /** @class */ (function () {
         //mr_c.materials[0].setTexture("_MainTex",this.assetMgr.getDefaultTexture("grid"));
         state.finish = true;
     };
+    /**
+     * 加载pbr 资源
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr.prototype.loadpbrRes = function (lastState, state) {
         var _this = this;
         this.assetMgr.load(this.iblPath + "negx.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -12036,6 +13206,11 @@ var test_pbr = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载pbr 资源
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr.prototype.loadpbrRes1 = function (lastState, state) {
         var _this = this;
         this.assetMgr.load(this.iblPath + "negx_1.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -12064,6 +13239,11 @@ var test_pbr = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载pbr 资源
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr.prototype.loadpbrRes2 = function (lastState, state) {
         var _this = this;
         this.assetMgr.load(this.iblPath + "negx_2.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -12092,6 +13272,11 @@ var test_pbr = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载pbr 资源
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr.prototype.loadpbrRes3 = function (lastState, state) {
         var _this = this;
         this.assetMgr.load(this.iblPath + "negx_3.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -12120,6 +13305,11 @@ var test_pbr = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载pbr 资源
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr.prototype.loadpbrRes4 = function (lastState, state) {
         var _this = this;
         this.assetMgr.load(this.iblPath + "negx_4.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -12148,6 +13338,11 @@ var test_pbr = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载纹理
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr.prototype.loadTexture = function (lastState, state) {
         var _this = this;
         //加载图片资源
@@ -12177,6 +13372,9 @@ var test_pbr = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 添加cube
+     */
     test_pbr.prototype.addCube = function () {
         var cube = new m4m.framework.transform();
         cube.name = "cube";
@@ -12249,6 +13447,21 @@ var test_pbr_scene = /** @class */ (function () {
         this.taskmgr.addTaskCall(this.loadpbrRes4.bind(this));
         this.taskmgr.addTaskCall(this.init.bind(this));
     };
+    /**
+     * 添加球
+     * @param x x值
+     * @param y y值
+     * @param z z值
+     * @param IBL cube纹理0
+     * @param IBL_1 cube纹理1
+     * @param IBL_2 cube纹理2
+     * @param IBL_3 cube纹理3
+     * @param IBL_4 cube纹理4
+     * @param IBL_5 cube纹理5
+     * @param albedo 基础色
+     * @param metallic 金属度
+     * @param roughness 粗糙度
+     */
     test_pbr_scene.prototype.addSphere = function (x, y, z, IBL, IBL_1, IBL_2, IBL_3, IBL_4, IBL_5, albedo, metallic, roughness) {
         var temp1 = new m4m.framework.transform();
         temp1.localTranslate.x = x;
@@ -12287,6 +13500,11 @@ var test_pbr_scene = /** @class */ (function () {
         mr.materials[0].setCubeTexture("u_sky_4", IBL_4);
         // mr.materials[0].setCubeTexture("u_sky_5",IBL_5);
     };
+    /**
+     * 初始化
+     * @param astState
+     * @param state 加载状态
+     */
     test_pbr_scene.prototype.init = function (astState, state) {
         //sky
         var negx = this.assetMgr.getAssetByName("negx.jpg");
@@ -12365,6 +13583,11 @@ var test_pbr_scene = /** @class */ (function () {
         //mr_c.materials[0].setTexture("_MainTex",this.assetMgr.getDefaultTexture("grid"));
         state.finish = true;
     };
+    /**
+     * 加载pbr 资源
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr_scene.prototype.loadpbrRes = function (lastState, state) {
         var _this = this;
         this.assetMgr.load(this.iblPath + "negx.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -12393,6 +13616,11 @@ var test_pbr_scene = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载pbr 资源
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr_scene.prototype.loadpbrRes1 = function (lastState, state) {
         var _this = this;
         this.assetMgr.load(this.iblPath + "negx_1.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -12421,6 +13649,11 @@ var test_pbr_scene = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载pbr 资源
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr_scene.prototype.loadpbrRes2 = function (lastState, state) {
         var _this = this;
         this.assetMgr.load(this.iblPath + "negx_2.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -12449,6 +13682,11 @@ var test_pbr_scene = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载pbr 资源
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr_scene.prototype.loadpbrRes3 = function (lastState, state) {
         var _this = this;
         this.assetMgr.load(this.iblPath + "negx_3.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -12477,6 +13715,11 @@ var test_pbr_scene = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载pbr 资源
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr_scene.prototype.loadpbrRes4 = function (lastState, state) {
         var _this = this;
         this.assetMgr.load(this.iblPath + "negx_4.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -12505,6 +13748,11 @@ var test_pbr_scene = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载纹理
+     * @param lastState
+     * @param state 加载状态
+     */
     test_pbr_scene.prototype.loadTexture = function (lastState, state) {
         var _this = this;
         //加载图片资源
@@ -12567,6 +13815,9 @@ var demo;
             // this.camera.far = 5000;
             // this.camera.backgroundColor = new m4m.math.color(0.3, 0.3, 0.3);
         };
+        /**
+         * 尝试添加
+         */
         test_performance.prototype.tryadd = function () {
             var max = 2000;
             var maxcc = 0;
@@ -12604,6 +13855,9 @@ var demo;
                 c++;
             }
         };
+        /**
+         * 随机一个
+         */
         test_performance.prototype.randome = function () {
             var idx = Math.floor(Math.random() * this.cubes.length);
             var cube = this.cubes[idx];
@@ -12693,6 +13947,11 @@ var test_pick_boxcollider = /** @class */ (function () {
         this.scene.addChild(lObj);
         l.type = m4m.framework.LightTypeEnum.Direction;
     };
+    /**
+     * 加载场景
+     * @param assetName 资源名
+     * @param isCompress 是压缩？
+     */
     test_pick_boxcollider.prototype.loadScene = function (assetName, isCompress) {
         var _this = this;
         if (isCompress === void 0) { isCompress = false; }
@@ -12735,12 +13994,23 @@ var test_pick_boxcollider = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 获取颜色
+     * @param r r值
+     * @param g g值
+     * @param b b值
+     * @returns 颜色值
+     */
     test_pick_boxcollider.prototype.getColor = function (r, g, b) {
         var key = "".concat(r, "_").concat(g, "_").concat(b);
         if (!this.colorMap[key])
             this.colorMap[key] = new m4m.math.vector4(r, g, b, 1);
         return this.colorMap[key];
     };
+    /**
+     * 添加球
+     * @param pos
+     */
     test_pick_boxcollider.prototype.addBall = function (pos) {
         var ball = this.generateGeomtry("sphere", this.getColor(1, 0, 0));
         m4m.math.vec3Clone(pos, ball.localTranslate);
@@ -12748,12 +14018,19 @@ var test_pick_boxcollider = /** @class */ (function () {
         this.balls.push(ball);
         ball.markDirty();
     };
+    /**
+     * 点击拾取
+     */
     test_pick_boxcollider.prototype.pickDown = function () {
         var v3 = this.rayCollider();
         if (v3) {
             this.addBall(v3.hitposition);
         }
     };
+    /**
+     * 射线碰撞
+     * @returns 拾取信息
+     */
     test_pick_boxcollider.prototype.rayCollider = function () {
         var inputMgr = this.app.getInputMgr();
         var ray = this.camera.creatRayByScreen(new m4m.math.vector2(inputMgr.point.x, inputMgr.point.y), this.app);
@@ -12764,6 +14041,12 @@ var test_pick_boxcollider = /** @class */ (function () {
         var bool = this.scene.pick(ray, temp, false, tranRoot, mask);
         return bool ? temp : null;
     };
+    /**
+     * 生成几何体
+     * @param meshType mesh类型
+     * @param color 颜色
+     * @returns 节点
+     */
     test_pick_boxcollider.prototype.generateGeomtry = function (meshType, color) {
         if (meshType === void 0) { meshType = "cube"; }
         if (color === void 0) { color = null; }
@@ -12854,6 +14137,9 @@ var test_postCamera = /** @class */ (function () {
             objCam.markDirty(); //标记为需要刷新
         }
     };
+    /**
+     * 添加相机
+     */
     test_postCamera.prototype.addCamera = function () {
         this.camTran = new m4m.framework.transform();
         this.camTran.name = "Camera";
@@ -12933,6 +14219,11 @@ var test_softCut = /** @class */ (function () {
         this.taskmgr.addTaskCall(this.loadTexture.bind(this));
         this.taskmgr.addTaskCall(this.createUI.bind(this));
     };
+    /**
+     * 创建UI
+     * @param astState
+     * @param state 状态
+     */
     test_softCut.prototype.createUI = function (astState, state) {
         var Temptex = this.assetMgr.getAssetByName("cutbg.png");
         var atlasComp = this.assetMgr.getAssetByName("comp.atlas.json");
@@ -13113,6 +14404,11 @@ var test_softCut = /** @class */ (function () {
         }, false);
         state.finish = true;
     };
+    /**
+     * 加载纹理
+     * @param lastState
+     * @param state 状态
+     */
     test_softCut.prototype.loadTexture = function (lastState, state) {
         var _this = this;
         //加载图片资源
@@ -13222,6 +14518,9 @@ var test_spine_additiveBlending = /** @class */ (function () {
 var test_spine_changeSkin = /** @class */ (function () {
     function test_spine_changeSkin() {
         var _this = this;
+        /**
+         * 随机SKin
+         */
         this.randomSkin = function () {
             var skeleton = _this._comp.skeleton;
             var randomIndex = Math.floor(Math.random() * (skeleton.data.skins.length - 1));
@@ -13229,6 +14528,9 @@ var test_spine_changeSkin = /** @class */ (function () {
             _this._comp.skeleton.setSkin(skin);
             _this._comp.skeleton.setSlotsToSetupPose();
         };
+        /**
+         * 随机组Skin
+         */
         this.randomGroupSkin = function () {
             var skeleton = _this._comp.skeleton;
             var skins = [];
@@ -13292,6 +14594,10 @@ var test_spine_changeSkin = /** @class */ (function () {
             datGui.init().then(function () { return _this.setGUI(); });
         });
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_spine_changeSkin.prototype.setGUI = function () {
         var _this = this;
         if (!dat)
@@ -13310,6 +14616,9 @@ var test_spine_change_slot_mesh_tex = /** @class */ (function () {
     function test_spine_change_slot_mesh_tex() {
         var _this = this;
         this._index = 0;
+        /**
+         * 改变孔
+         */
         this.changeSlot = function () {
             _this._index = (_this._index + 1) % 2;
             var tex = ["head2.png", "head3.png"][_this._index];
@@ -13317,6 +14626,9 @@ var test_spine_change_slot_mesh_tex = /** @class */ (function () {
                 _this._comp.changeSlotTexture("1像素头像", texture);
             });
         };
+        /**
+         * 清理孔
+         */
         this.clearSlot = function () {
             _this._index = (_this._index + 1) % 2;
             var tex = ["head2.png", "head3.png"][_this._index];
@@ -13370,6 +14682,10 @@ var test_spine_change_slot_mesh_tex = /** @class */ (function () {
             datGui.init().then(function () { return _this.setGUI(); });
         });
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_spine_change_slot_mesh_tex.prototype.setGUI = function () {
         var _this = this;
         if (!dat)
@@ -13388,6 +14704,9 @@ var test_spine_change_slot_region_tex = /** @class */ (function () {
     function test_spine_change_slot_region_tex() {
         var _this = this;
         this._index = 0;
+        /**
+         * 改变孔
+         */
         this.changeSlot = function () {
             _this._index = (_this._index + 1) % 2;
             var tex = ["head2.png", "head3.png"][_this._index];
@@ -13440,6 +14759,10 @@ var test_spine_change_slot_region_tex = /** @class */ (function () {
             datGui.init().then(function () { return _this.setGUI(); });
         });
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_spine_change_slot_region_tex.prototype.setGUI = function () {
         var _this = this;
         if (!dat)
@@ -13495,6 +14818,10 @@ var test_spine_clip = /** @class */ (function () {
             datGui.init().then(function () { return _this.setGUI(); });
         });
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_spine_clip.prototype.setGUI = function () {
         var _this = this;
         if (!dat)
@@ -13514,6 +14841,9 @@ var test_spine_IK = /** @class */ (function () {
         this._temptMat = new m4m.math.matrix();
         this._temptPos = new m4m.math.vector2();
         this.bonesPos = {};
+        /**
+         * 发射
+         */
         this.fire = function () {
             _this._comp.state.setAnimation(3, "aim", true);
             _this._comp.state.setAnimation(4, "shoot", false);
@@ -13523,6 +14853,9 @@ var test_spine_IK = /** @class */ (function () {
                 }
             };
         };
+        /**
+         *  跳跃
+         */
         this.jump = function () {
             _this._comp.state.setAnimation(2, "jump", false);
             _this._comp.state.addEmptyAnimation(2, 0.5, 0);
@@ -13631,6 +14964,10 @@ var test_spine_IK = /** @class */ (function () {
             };
         });
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_spine_IK.prototype.setGUI = function () {
         var _this = this;
         if (!dat)
@@ -13775,6 +15112,9 @@ var test_spine_mesh = /** @class */ (function () {
             datGui.init().then(function () { return _this.setGUI(); });
         });
     };
+    /**
+     * 设置GUI
+     */
     test_spine_mesh.prototype.setGUI = function () {
         var _this = this;
         if (!dat)
@@ -13834,6 +15174,10 @@ var test_spine_spriteSheet = /** @class */ (function () {
             datGui.init().then(function () { return _this.setGUI(); });
         });
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_spine_spriteSheet.prototype.setGUI = function () {
         var _this = this;
         if (!dat)
@@ -14021,6 +15365,9 @@ var test_spine_tank = /** @class */ (function () {
             datGui.init().then(function () { return _this.setGUI(); });
         });
     };
+    /**
+     * 设置GUI
+     */
     test_spine_tank.prototype.setGUI = function () {
         var _this = this;
         if (!dat)
@@ -14036,6 +15383,9 @@ var test_spine_tank = /** @class */ (function () {
 var test_spine_transition = /** @class */ (function () {
     function test_spine_transition() {
         var _this = this;
+        /**
+         * 播放死亡动画
+         */
         this.playDie = function () {
             _this._comp.state.setAnimation(0, "death", false);
             _this.setAnimations(_this._comp.state);
@@ -14099,6 +15449,10 @@ var test_spine_transition = /** @class */ (function () {
             }
         };
     };
+    /**
+     * 设置GUI
+     * @returns
+     */
     test_spine_transition.prototype.setGUI = function () {
         var _this = this;
         if (!dat)
@@ -14445,6 +15799,9 @@ var test_sssss = /** @class */ (function () {
         hoverc.scaleSpeed = 0.1;
         hoverc.lookAtPoint = new m4m.math.vector3(0, 2.5, 0);
     };
+    /**
+     * 初始化
+     */
     test_sssss.prototype.init = function () {
         var _this = this;
         var names = ["Head"];
@@ -14688,6 +16045,11 @@ var test_sssss = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载PBR 资源
+     * @param lastState
+     * @param state 资源状态
+     */
     test_sssss.prototype.loadpbrRes = function (lastState, state) {
         var _this = this;
         this.app.getAssetMgr().load("".concat(resRootPath, "pbrRes/SSSSS/") + "albedo.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -14708,6 +16070,11 @@ var test_sssss = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载IBL
+     * @param lastState
+     * @param state 资源状态
+     */
     test_sssss.prototype.loadIBL = function (lastState, state) {
         var _this = this;
         this.app.getAssetMgr().load("".concat(resRootPath, "pbrRes/IBL/map/") + "negx_1.jpg", m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -14815,6 +16182,11 @@ var Joystick = /** @class */ (function () {
         this.mouseLeft = false;
         this.mouseRight = false;
     }
+    /**
+     * 初始化
+     * @param app 引擎app
+     * @param overlay2d 引擎overlay2D对象
+     */
     Joystick.prototype.init = function (app, overlay2d) {
         var _this = this;
         this.app = app;
@@ -14828,6 +16200,11 @@ var Joystick = /** @class */ (function () {
         document.addEventListener("touchend", function (e) { _this.onTouchEnd(e); e.preventDefault(); });
         document.addEventListener("touchmove", function (e) { _this.onTouchMove(e); e.preventDefault(); });
     };
+    /**
+     * 加载纹理
+     * @param laststate
+     * @param state 状态
+     */
     Joystick.prototype.loadTexture = function (laststate, state) {
         var _this = this;
         this.app.getAssetMgr().load("".concat(resRootPath, "texture/joystick0.png"), m4m.framework.AssetTypeEnum.Auto, function (s0) {
@@ -14846,6 +16223,11 @@ var Joystick = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 添加控制遥感
+     * @param laststate
+     * @param state 状态
+     */
     Joystick.prototype.addJoystick = function (laststate, state) {
         { //left
             this.joystickLeft0 = new m4m.framework.transform2D();
@@ -14915,6 +16297,10 @@ var Joystick = /** @class */ (function () {
         enumerable: false,
         configurable: true
     });
+    /**
+     * 当鼠标点下
+     * @param e 鼠标事件
+     */
     Joystick.prototype.onMouseDown = function (e) {
         if (e.clientX <= this.overlay2d.canvas.pixelWidth / 2) {
             this.mouseLeft = true;
@@ -14949,6 +16335,10 @@ var Joystick = /** @class */ (function () {
             this.joystickRight1.markDirty();
         }
     };
+    /**
+     * 当鼠标点下释放
+     * @param e 鼠标事件
+     */
     Joystick.prototype.onMouseUp = function (e) {
         if (this.mouseRight) {
             if (this.triggerFunc != null) {
@@ -14966,6 +16356,10 @@ var Joystick = /** @class */ (function () {
         this.rightAxis = new m4m.math.vector2(0, 0);
         this.joystickRight1.markDirty();
     };
+    /**
+     * 当鼠标移动
+     * @param e 鼠标事件
+     */
     Joystick.prototype.onMouseMove = function (e) {
         if (this.mouseLeft) {
             var v = new m4m.math.vector2(e.clientX, e.clientY);
@@ -14998,6 +16392,10 @@ var Joystick = /** @class */ (function () {
             this.joystickRight1.markDirty();
         }
     };
+    /**
+     * 当触摸开始
+     * @param e 触摸事件
+     */
     Joystick.prototype.onTouchStart = function (e) {
         if (e.touches[0].clientX <= this.overlay2d.canvas.pixelWidth / 2) {
             this.touchLeft = e.touches[0].identifier;
@@ -15064,6 +16462,10 @@ var Joystick = /** @class */ (function () {
             this.joystickRight1.markDirty();
         }
     };
+    /**
+     * 当触摸结束
+     * @param e 触摸事件
+     */
     Joystick.prototype.onTouchEnd = function (e) {
         if (this.touchLeft) {
             var flag = false;
@@ -15101,6 +16503,10 @@ var Joystick = /** @class */ (function () {
             }
         }
     };
+    /**
+     * 当触摸移动
+     * @param e 触摸事件
+     */
     Joystick.prototype.onTouchMove = function (e) {
         if (this.touchLeft != 0) {
             var index = -1;
@@ -15151,6 +16557,10 @@ var Joystick = /** @class */ (function () {
             }
         }
     };
+    /**
+     * 更新
+     * @param delta 帧间时间
+     */
     Joystick.prototype.update = function (delta) {
         this.taskmgr.move(delta);
     };
@@ -15175,6 +16585,11 @@ var demo;
             this.fireStep = 0.5;
             this.fireTick = 0;
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         TankGame.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("".concat(resRootPath, "shader/shader.assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -15182,6 +16597,11 @@ var demo;
                 }
             });
         };
+        /**
+         * 加载纹理
+         * @param laststate
+         * @param state 状态
+         */
         TankGame.prototype.loadTexture = function (laststate, state) {
             this.app.getAssetMgr().load("".concat(resRootPath, "texture/zg256.png"), m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -15189,6 +16609,11 @@ var demo;
                 }
             });
         };
+        /**
+         * 加载 模型预制体
+         * @param laststate
+         * @param state 状态
+         */
         TankGame.prototype.loadHeroPrefab = function (laststate, state) {
             var _this = this;
             var resName = "tank01";
@@ -15209,6 +16634,11 @@ var demo;
                 }
             });
         };
+        /**
+         * 加载敌人预制体
+         * @param laststate
+         * @param state 状态
+         */
         TankGame.prototype.loadEnemyPrefab = function (laststate, state) {
             var _this = this;
             var resName = "tank02";
@@ -15229,6 +16659,11 @@ var demo;
                 }
             });
         };
+        /**
+         * 加载场景
+         * @param laststate
+         * @param state 状态
+         */
         TankGame.prototype.loadScene = function (laststate, state) {
             var _this = this;
             var resName = "test_scene";
@@ -15250,6 +16685,11 @@ var demo;
                 }
             });
         };
+        /**
+         * 添加相机
+         * @param laststate
+         * @param state 状态
+         */
         TankGame.prototype.addCameraAndLight = function (laststate, state) {
             var _this = this;
             var tranCam = new m4m.framework.transform();
@@ -15409,6 +16849,11 @@ var demo;
             tranLight.markDirty();
             state.finish = true;
         };
+        /**
+         * 添加游戏摇杆
+         * @param laststate
+         * @param state 状态
+         */
         TankGame.prototype.addJoystick = function (laststate, state) {
             var _this = this;
             this.overlay2d = new m4m.framework.overlay2D();
@@ -15426,6 +16871,11 @@ var demo;
             };
             state.finish = true;
         };
+        /**
+         * 添加 场景对象
+         * @param laststate
+         * @param state 状态
+         */
         TankGame.prototype.addObject = function (laststate, state) {
             { //add some puppets
                 var n = 2;
@@ -15492,6 +16942,11 @@ var demo;
             }
             this.fireTick += delta;
         };
+        /**
+         * 坦克与的碰撞检测
+         * @param tran 节点
+         * @returns
+         */
         TankGame.prototype.testTankCol = function (tran) {
             var col = tran.gameObject.getComponent("boxcollider");
             for (var i = 0; i < this.cubes.length; i++) {
@@ -15512,6 +16967,10 @@ var demo;
             }
             return false;
         };
+        /**
+         * 坦克遥控
+         * @param delta 帧间时间
+         */
         TankGame.prototype.tankControl = function (delta) {
             if (this.joystick != null) {
                 var targetAngle = new m4m.math.vector3();
@@ -15654,6 +17113,9 @@ var demo;
                 }
             }
         };
+        /**
+         * 开火
+         */
         TankGame.prototype.fire = function () {
             var tran = new m4m.framework.transform();
             tran.name = "bullet" + this.bulletId;
@@ -15687,6 +17149,10 @@ var demo;
             this.bulletList.push(bullet);
             // this.cameraShock.play(1, 0.5, true);
         };
+        /**
+         * 更新子弹
+         * @param delta
+         */
         TankGame.prototype.updateBullet = function (delta) {
             for (var i = 0; i < this.bulletList.length; i++) {
                 var b = this.bulletList[i];
@@ -15723,6 +17189,11 @@ var t;
             this.eulerAngle = m4m.math.pool.new_vector3();
             this.zeroPoint = new m4m.math.vector3(0, 0, 0);
         }
+        /**
+         * 加载着色器
+         * @param laststate 上一个状态
+         * @param state 当前状态
+         */
         test_three_leaved_rose_curve.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -15730,6 +17201,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载文本资源
+         * @param laststate 上一个状态
+         * @param state 当前状态
+         */
         test_three_leaved_rose_curve.prototype.loadText = function (laststate, state) {
             this.app.getAssetMgr().load("res/trailtest2_00000.imgdesc.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -15748,6 +17224,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载角色模型
+         * @param laststate 上一个状态
+         * @param state 当前状态
+         */
         test_three_leaved_rose_curve.prototype.loadRole = function (laststate, state) {
             var _this = this;
             this.app.getAssetMgr().load("res/prefabs/dragon/dragon.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -15777,6 +17258,11 @@ var t;
                 }
             });
         };
+        /**
+         * 添加摄像机
+         * @param laststate 上一个状态
+         * @param state 当前状态
+         */
         test_three_leaved_rose_curve.prototype.addcam = function (laststate, state) {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -15790,6 +17276,11 @@ var t;
             objCam.markDirty(); //标记为需要刷新
             state.finish = true;
         };
+        /**
+         * 添加立方体和相关组件
+         * @param laststate 上一个状态
+         * @param state 当前状态
+         */
         test_three_leaved_rose_curve.prototype.addcube = function (laststate, state) {
             //添加一个盒子
             {
@@ -15855,6 +17346,10 @@ var t;
             }
             state.finish = true;
         };
+        /**
+         * 启动函数
+         * @param app 应用程序
+         */
         test_three_leaved_rose_curve.prototype.start = function (app) {
             console.log("i am here.");
             this.app = app;
@@ -15866,6 +17361,10 @@ var t;
             // this.taskmgr.addTaskCall(this.addcube.bind(this))
             this.taskmgr.addTaskCall(this.addcam.bind(this));
         };
+        /**
+        * 更新函数
+        * @param delta 时间间隔
+        */
         test_three_leaved_rose_curve.prototype.update = function (delta) {
             this.taskmgr.move(delta);
             this.timer += delta;
@@ -15983,6 +17482,11 @@ var test_uiPerfabLoad = /** @class */ (function () {
             _this.doLoad(inputh.value);
         };
     };
+    /**
+     * 创建UI
+     * @param astState
+     * @param state 状态
+     */
     test_uiPerfabLoad.prototype.createUI = function (astState, state) {
         var atlasComp = this.assetMgr.getAssetByName("comp.atlas.json");
         var tex_0 = this.assetMgr.getAssetByName("zg03_256.png");
@@ -16018,6 +17522,11 @@ var test_uiPerfabLoad = /** @class */ (function () {
         }, false);
         state.finish = true;
     };
+    /**
+     * 加载资源
+     * @param name 资源名
+     * @returns
+     */
     test_uiPerfabLoad.prototype.doLoad = function (name) {
         var _this = this;
         if (!this.bgui)
@@ -16040,6 +17549,11 @@ var test_uiPerfabLoad = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载着色器
+     * @param lastState
+     * @param state 状态
+     */
     test_uiPerfabLoad.prototype.loadShaders = function (lastState, state) {
         this.assetMgr.load("".concat(resRootPath, "shader/shader.assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (s) {
             if (s.isfinish) {
@@ -16047,6 +17561,11 @@ var test_uiPerfabLoad = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载纹理
+     * @param lastState
+     * @param state 状态
+     */
     test_uiPerfabLoad.prototype.loadTexture = function (lastState, state) {
         var _this = this;
         //加载图片资源
@@ -16103,6 +17622,9 @@ var test_uimove = /** @class */ (function () {
         var x2 = Math.sin(this.timer * 0.1);
         var z2 = Math.cos(this.timer * 0.1);
     };
+    /**
+     * 测试
+     */
     test_uimove.prototype.test = function () {
         var parentRect = new Rect();
         parentRect.width = 600;
@@ -16151,6 +17673,9 @@ var Rect = /** @class */ (function (_super) {
         enumerable: false,
         configurable: true
     });
+    /**
+     * 对齐
+     */
     Rect.prototype.layout = function () {
         if (this.parent != null && this.alignType != null) {
             switch (this.alignType) {
@@ -16228,6 +17753,11 @@ var test_videoTexture = /** @class */ (function () {
             });
         });
     };
+    /**
+     * 创建视频纹理
+     * @param video 视频数据元素
+     * @returns
+     */
     test_videoTexture.prototype.makeVideoTexture = function (video) {
         var tex = new m4m.framework.texture("videoTex");
         var t2d = new m4m.render.videoTexture(video);
@@ -16596,6 +18126,9 @@ var t;
             this.objCam.lookatPoint(new m4m.math.vector3(0, 0, 0));
             this.objCam.markDirty(); //标记为需要刷新
         };
+        /**
+         * 执行改变着色器
+         */
         test_changeshader.prototype.changeShader = function () {
             var _this = this;
             var btn = document.createElement("button");
@@ -16619,6 +18152,10 @@ var t;
             btn2.style.position = "absolute";
             this.app.container.appendChild(btn2);
         };
+        /**
+         * 改变着色器
+         * @param sha 着色器
+         */
         test_changeshader.prototype.change = function (sha) {
             // for (let i = 0; i < 4; i++)
             // {
@@ -16656,6 +18193,11 @@ var t;
             this.taskmgr.addTaskCall(this.loadTexture.bind(this));
             this.taskmgr.addTaskCall(this.initscene.bind(this));
         };
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         test_clearDepth0.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -16663,6 +18205,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载纹理
+         * @param laststate
+         * @param state 状态
+         */
         test_clearDepth0.prototype.loadTexture = function (laststate, state) {
             this.app.getAssetMgr().load("res/rock256.png", m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -16673,6 +18220,11 @@ var t;
                 }
             });
         };
+        /**
+         *  初始化场景
+         * @param laststate
+         * @param state 状态
+         */
         test_clearDepth0.prototype.initscene = function (laststate, state) {
             var objCam = new m4m.framework.transform();
             objCam.name = "cam_show";
@@ -16749,6 +18301,11 @@ var test_effect = /** @class */ (function () {
         this.bestop = false;
         this.bereplay = false;
     }
+    /**
+     * 加载着色器
+     * @param laststate
+     * @param state 状态
+     */
     test_effect.prototype.loadShader = function (laststate, state) {
         this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
             if (_state.isfinish) {
@@ -16756,6 +18313,11 @@ var test_effect = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载文本
+     * @param laststate
+     * @param state 状态
+     */
     test_effect.prototype.loadText = function (laststate, state) {
         this.app.getAssetMgr().load("res/zg256.png", m4m.framework.AssetTypeEnum.Auto, function (s) {
             if (s.isfinish) {
@@ -16766,6 +18328,11 @@ var test_effect = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 添加cube
+     * @param laststate
+     * @param state 状态
+     */
     test_effect.prototype.addcube = function (laststate, state) {
         //添加一个盒子
         {
@@ -16792,6 +18359,11 @@ var test_effect = /** @class */ (function () {
         }
         state.finish = true;
     };
+    /**
+     * 加载模型
+     * @param laststate
+     * @param state 状态
+     */
     test_effect.prototype.loadModel = function (laststate, state) {
         var _this = this;
         this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -16819,6 +18391,11 @@ var test_effect = /** @class */ (function () {
         // this.taskmgr.addTaskCall(this.loadModel.bind(this));
         this.taskmgr.addTaskCall(this.loadEffect.bind(this));
     };
+    /**
+     * 加载特效
+     * @param laststate
+     * @param state 状态
+     */
     test_effect.prototype.loadEffect = function (laststate, state) {
         var _this = this;
         // this._loadEffect("res/particleEffect/hjxnew/hjxnew.assetbundle.json", "hjxnew");//
@@ -16840,6 +18417,9 @@ var test_effect = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 添加按钮
+     */
     test_effect.prototype.addButton = function () {
         var _this = this;
         var btn = document.createElement("button");
@@ -16916,10 +18496,20 @@ var test_effect = /** @class */ (function () {
         btn1.style.position = "absolute";
         this.app.container.appendChild(btn1);
     };
+    /**
+     * 通过URL 获取资源名
+     * @param path URL
+     * @returns
+     */
     test_effect.prototype.getNameFromURL = function (path) {
         var index = path.lastIndexOf("/");
         return path.substring(index + 1);
     };
+    /**
+     * 添加相机
+     * @param laststate
+     * @param state
+     */
     test_effect.prototype.addcam = function (laststate, state) {
         //添加一个摄像机
         var objCam = new m4m.framework.transform();
@@ -16971,6 +18561,11 @@ var t;
             this.WaveAmplitude = 0.05;
             this.play = true;
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         test_integratedrender.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -16978,6 +18573,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载 文本字符串数据
+         * @param laststate
+         * @param state 状态
+         */
         test_integratedrender.prototype.loadText = function (laststate, state) {
             this.app.getAssetMgr().load("res/trailtest2_00000.imgdesc.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -17004,6 +18604,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载角色模型资源
+         * @param laststate
+         * @param state 状态
+         */
         test_integratedrender.prototype.loadRole = function (laststate, state) {
             var _this = this;
             this.app.getAssetMgr().load("res/prefabs/0000_zs_male/0000_zs_male.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -17023,6 +18628,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载武器模型资源
+         * @param laststate
+         * @param state 状态
+         */
         test_integratedrender.prototype.loadWeapon = function (laststate, state) {
             var _this = this;
             this.app.getAssetMgr().load("res/prefabs/0002_sword_sword/0002_sword_sword.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -17040,6 +18650,11 @@ var t;
                 }
             });
         };
+        /**
+         * 初始化场景
+         * @param laststate
+         * @param state
+         */
         test_integratedrender.prototype.initscene = function (laststate, state) {
             {
                 //添加一个摄像机
@@ -17184,6 +18799,13 @@ var t;
             //     this.org.markDirty();
             // }
         };
+        /**
+         * 添加按钮
+         * @param top 上位置
+         * @param left 左位置
+         * @param text 文本
+         * @returns html 按钮
+         */
         test_integratedrender.prototype.addbtn = function (top, left, text) {
             var btn = document.createElement("button");
             btn.style.top = top;
@@ -17203,6 +18825,10 @@ var t;
         function test_light1() {
             this.timer = 0;
         }
+        /**
+         * 加载文本字符串
+         * @returns 等待Promise
+         */
         test_light1.prototype.loadText = function () {
             var _this = this;
             return new Promise(function (resolve, reject) {
@@ -17219,6 +18845,9 @@ var t;
                 });
             });
         };
+        /**
+         * 添加所有 cube
+         */
         test_light1.prototype.addCubes = function () {
             for (var i = -4; i < 5; i++) {
                 for (var j = -4; j < 5; j++) {
@@ -17227,6 +18856,12 @@ var t;
                 }
             }
         };
+        /**
+         * 添加cube
+         * @param x 位置x
+         * @param y 位置y
+         * @param z 位置z
+         */
         test_light1.prototype.addCube = function (x, y, z) {
             var cube = new m4m.framework.transform();
             cube.name = "cube";
@@ -17248,6 +18883,9 @@ var t;
                 cuber.materials[0].setTexture("_MainTex", this.tex);
             }
         };
+        /**
+         * 添加相机和灯光
+         */
         test_light1.prototype.addCameraAndLight = function () {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -17430,6 +19068,11 @@ var dome;
         function testCJ() {
             this.time = 0;
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         testCJ.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -17437,6 +19080,11 @@ var dome;
                 }
             });
         };
+        /**
+         * 加载mesh
+         * @param laststate
+         * @param state 状态
+         */
         testCJ.prototype.loadmesh = function (laststate, state) {
             var _this = this;
             var name = "zs_chuangjue_01";
@@ -17455,6 +19103,11 @@ var dome;
                 }
             });
         };
+        /**
+         * 加载武器
+         * @param laststate
+         * @param state 状态
+         */
         testCJ.prototype.loadweapon = function (laststate, state) {
             var _this = this;
             var name = "Quad"; //Bip01Prop1/
@@ -17471,6 +19124,11 @@ var dome;
                 }
             });
         };
+        /**
+         * 测试
+         * @param laststate
+         * @param state 状态
+         */
         testCJ.prototype.test = function (laststate, state) {
             this.dragon = new m4m.framework.transform();
             //this.dragon.localEulerAngles=new m4m.math.vector3(0,90,0);
@@ -17489,6 +19147,11 @@ var dome;
             this.scene.addChild(this.dragon);
             state.finish = true;
         };
+        /**
+         * 添加相机
+         * @param laststate
+         * @param state 状态
+         */
         testCJ.prototype.addCamera = function (laststate, state) {
             var tranCam = new m4m.framework.transform();
             tranCam.name = "Cam";
@@ -17609,6 +19272,9 @@ var t;
             });
             this.addDomUI();
         };
+        /**
+         * 添加GUI
+         */
         test_xinshouMask.prototype.addDomUI = function () {
             var _this = this;
             var tillingX = document.createElement("label");
@@ -17688,6 +19354,11 @@ var t;
         return test_xinshouMask;
     }());
     t.test_xinshouMask = test_xinshouMask;
+    /**
+     * 通过URL获取文件名
+     * @param url   url
+     * @returns 文件名
+     */
     function getFileName(url) {
         var filei = url.lastIndexOf("/");
         var file = url.substr(filei + 1);
@@ -17738,6 +19409,11 @@ var t;
             this.timer = 0;
             this.taskmgr = new m4m.framework.taskMgr();
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         test_metal.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -17745,6 +19421,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载文本数据
+         * @param laststate
+         * @param state 状态
+         */
         test_metal.prototype.loadText = function (laststate, state) {
             var c = 0;
             c++;
@@ -17809,6 +19490,11 @@ var t;
             // }
             // );
         };
+        /**
+         * 添加相机和光源
+         * @param laststate
+         * @param state 状态
+         */
         test_metal.prototype.addcamandlight = function (laststate, state) {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -17848,6 +19534,11 @@ var t;
             }
             state.finish = true;
         };
+        /**
+         * 加载和添加模型
+         * @param laststate
+         * @param state 状态
+         */
         test_metal.prototype.addmetalmodel = function (laststate, state) {
             var _this = this;
             this.app.getAssetMgr().load("res/prefabs/specular/0122_huanghunshibing.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -17867,6 +19558,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载和添加Asi模型
+         * @param laststate
+         * @param state 状态
+         */
         test_metal.prototype.addAsiModel = function (laststate, state) {
             var _this = this;
             this.app.getAssetMgr().load("res/prefabs/asi_streamlight/asi_streamlight.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -17926,6 +19622,14 @@ var t;
             this.diffuse = input;
             this.emitpower = input1;
         };
+        /**
+         * 添加输入框
+         * @param top 上
+         * @param left 左
+         * @param text 文本
+         * @param type 类型
+         * @returns html输入组件
+         */
         test_metal.prototype.addinput = function (top, left, text, type) {
             if (type === void 0) { type = "number"; }
             var input = document.createElement("input");
@@ -17937,6 +19641,13 @@ var t;
             input.value = text;
             return input;
         };
+        /**
+         * 添加按钮
+         * @param top  上
+         * @param left 左
+         * @param text 文本
+         * @returns html按钮组件
+         */
         test_metal.prototype.addbtn = function (top, left, text) {
             var btn = document.createElement("button");
             btn.style.top = top;
@@ -18100,6 +19811,11 @@ var t;
             this.timer = 0;
             this.taskmgr = new m4m.framework.taskMgr();
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         Test_NormalMap.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("".concat(resRootPath, "shader/shader.assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -18107,6 +19823,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载文本
+         * @param laststate
+         * @param state 状态
+         */
         Test_NormalMap.prototype.loadText = function (laststate, state) {
             var c = 0;
             c++;
@@ -18143,6 +19864,11 @@ var t;
                 }
             });
         };
+        /**
+         * 添加普通cube
+         * @param laststate
+         * @param state 状态
+         */
         Test_NormalMap.prototype.addnormalcube = function (laststate, state) {
             this.normalCube = new m4m.framework.transform();
             this.normalCube.name = "cube";
@@ -18172,6 +19898,11 @@ var t;
             }
             state.finish = true;
         };
+        /**
+         * 添加cube
+         * @param laststate
+         * @param state 状态
+         */
         Test_NormalMap.prototype.addcube = function (laststate, state) {
             var cube = new m4m.framework.transform();
             cube.name = "cube";
@@ -18193,6 +19924,11 @@ var t;
             }
             state.finish = true;
         };
+        /**
+         * 添加相机和光源
+         * @param laststate
+         * @param state 状态
+         */
         Test_NormalMap.prototype.addcamandlight = function (laststate, state) {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -18591,6 +20327,11 @@ var t;
             this.timer = 0;
             this.taskmgr = new m4m.framework.taskMgr();
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         test_post_bloom.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -18598,6 +20339,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载文本数据
+         * @param laststate
+         * @param state 状态
+         */
         test_post_bloom.prototype.loadText = function (laststate, state) {
             this.app.getAssetMgr().load("res/zg256.png", m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -18608,6 +20354,11 @@ var t;
                 }
             });
         };
+        /**
+         * 添加相机和光源
+         * @param laststate
+         * @param state 状态
+         */
         test_post_bloom.prototype.addcamandlight = function (laststate, state) {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -18704,6 +20455,12 @@ var t;
             this.taskmgr.addTaskCall(this.loadText.bind(this));
             this.taskmgr.addTaskCall(this.addcamandlight.bind(this));
         };
+        /**
+         * 添加GUI按钮
+         * @param topOffset
+         * @param textContent
+         * @param func
+         */
         test_post_bloom.prototype.addbtn = function (topOffset, textContent, func) {
             var _this = this;
             var btn = document.createElement("button");
@@ -18730,6 +20487,11 @@ var t;
             this.timer = 0;
             this.taskmgr = new m4m.framework.taskMgr();
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         test_posteffect.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("".concat(resRootPath, "shader/shader.assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -18737,6 +20499,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载文本数据
+         * @param laststate
+         * @param state 状态
+         */
         test_posteffect.prototype.loadText = function (laststate, state) {
             this.app.getAssetMgr().load("".concat(resRootPath, "texture/map_diffuse.png"), m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -18747,6 +20514,11 @@ var t;
                 }
             });
         };
+        /**
+         * 添加cube
+         * @param laststate
+         * @param state 状态
+         */
         test_posteffect.prototype.addcube = function (laststate, state) {
             for (var i = -4; i < 5; i++) {
                 for (var j = -4; j < 5; j++) {
@@ -18775,6 +20547,11 @@ var t;
             }
             state.finish = true;
         };
+        /**
+         * 添加相机和光源
+         * @param laststate
+         * @param state 状态
+         */
         test_posteffect.prototype.addcamandlight = function (laststate, state) {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -19052,6 +20829,12 @@ var t;
             this.taskmgr.addTaskCall(this.addcube.bind(this));
             this.taskmgr.addTaskCall(this.addcamandlight.bind(this));
         };
+        /**
+         * 添加GUI按钮
+         * @param topOffset
+         * @param textContent
+         * @param func
+         */
         test_posteffect.prototype.addbtn = function (topOffset, textContent, func) {
             var _this = this;
             var btn = document.createElement("button");
@@ -19112,6 +20895,11 @@ var t;
             this.enddir = new m4m.math.vector3(0, 0, -1);
             this.targetdir = new m4m.math.vector3();
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         TestRotate.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 //state.finish = true;
@@ -19120,6 +20908,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载文本数据
+         * @param laststate
+         * @param state 状态
+         */
         TestRotate.prototype.loadText = function (laststate, state) {
             this.app.getAssetMgr().load("res/zg256.png", m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -19130,6 +20923,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载PVR纹理
+         * @param laststate
+         * @param state 状态
+         */
         TestRotate.prototype.loadPvr = function (laststate, state) {
             this.app.getAssetMgr().load("res/resources/" + this.name, m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -19137,6 +20935,9 @@ var t;
                 }
             });
         };
+        /**
+         * 改变着色器
+         */
         TestRotate.prototype.changeShader = function () {
             var _this = this;
             var btn = document.createElement("button");
@@ -19160,6 +20961,11 @@ var t;
             btn.style.position = "absolute";
             this.app.container.appendChild(btn);
         };
+        /**
+         * 添加相机
+         * @param laststate
+         * @param state 状态
+         */
         TestRotate.prototype.addcam = function (laststate, state) {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -19173,6 +20979,11 @@ var t;
             objCam.markDirty(); //标记为需要刷新
             state.finish = true;
         };
+        /**
+         * 添加cube
+         * @param laststate
+         * @param state 状态
+         */
         TestRotate.prototype.addcube = function (laststate, state) {
             //添加一个盒子
             {
@@ -19360,6 +21171,10 @@ var test_ShadowMap = /** @class */ (function () {
         viewCamObj.markDirty();
         this.ShowUI();
     };
+    /**
+     * 收集材质
+     * @returns
+     */
     test_ShadowMap.prototype.collectMat = function () {
         if (!this.assetmgr)
             return;
@@ -19374,6 +21189,12 @@ var test_ShadowMap = /** @class */ (function () {
             this.mats.push(mat);
         }
     };
+    /**
+     * 设置材质
+     * @param key key
+     * @param value 值
+     * @returns
+     */
     test_ShadowMap.prototype.setmat = function (key, value) {
         var _this = this;
         if (!this.mats)
@@ -19420,6 +21241,11 @@ var test_ShadowMap = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 适配场景包围
+     * @param lightCamera 相机
+     * @param aabb aabb 包围
+     */
     test_ShadowMap.prototype.FitToScene = function (lightCamera, aabb) {
         lightCamera.gameObject.transform.setWorldPosition(new m4m.math.vector3(aabb.center.x, aabb.center.y, aabb.center.z));
         var _vec3 = m4m.math.pool.new_vector3();
@@ -19429,6 +21255,9 @@ var test_ShadowMap = /** @class */ (function () {
         lightCamera.near = -maxLength / 2;
         lightCamera.far = maxLength / 2;
     };
+    /**
+     * 显示UI
+     */
     test_ShadowMap.prototype.ShowUI = function () {
         var _this = this;
         document.addEventListener("keydown", function (ev) {
@@ -19536,6 +21365,10 @@ var test_ShadowMap = /** @class */ (function () {
         inputCameraRotateY.style.position = "absolute";
         this.app.container.appendChild(inputCameraRotateY);
     };
+    /**
+     * 显示相机信息
+     * @param camera
+     */
     test_ShadowMap.prototype.ShowCameraInfo = function (camera) {
         var near = camera.near.toString();
         var far = camera.far.toString();
@@ -19558,6 +21391,11 @@ var t;
             this.angularVelocity = new m4m.math.vector3(0, 10, 0);
             this.eulerAngle = m4m.math.pool.new_vector3();
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         test_skillsystem.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -19565,6 +21403,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载文本数据
+         * @param laststate
+         * @param state 状态
+         */
         test_skillsystem.prototype.loadText = function (laststate, state) {
             this.app.getAssetMgr().load("res/zg256.png", m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -19575,6 +21418,11 @@ var t;
                 }
             });
         };
+        /**
+         * 添加相机
+         * @param laststate
+         * @param state 状态
+         */
         test_skillsystem.prototype.addcam = function (laststate, state) {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -19589,6 +21437,11 @@ var t;
             this.camera.backgroundColor = new m4m.math.color(0.3, 0.3, 0.3, 1);
             state.finish = true;
         };
+        /**
+         * 添加cube
+         * @param laststate
+         * @param state 状态
+         */
         test_skillsystem.prototype.addcube = function (laststate, state) {
             //添加一个盒子
             {
@@ -19638,6 +21491,11 @@ var t;
             }
             state.finish = true;
         };
+        /**
+         * 加载角色模型
+         * @param laststate
+         * @param state 状态
+         */
         test_skillsystem.prototype.loadRole = function (laststate, state) {
             var _this = this;
             this.role.name = "role";
@@ -19675,6 +21533,14 @@ var t;
                 state.finish = true;
             });
         };
+        /**
+         * 播放动画和特效
+         * @param aniplayer 动画播放器组件
+         * @param aniName 动画片段名
+         * @param effectName 特效名
+         * @param playAniDelay 播放延迟
+         * @param afterAni_PlayEffectDelay 播放特效延迟
+         */
         test_skillsystem.prototype.playAniAndEffect = function (aniplayer, aniName, effectName, playAniDelay, afterAni_PlayEffectDelay) {
             var _this = this;
             {
@@ -19705,6 +21571,11 @@ var t;
                 }, playAniDelay);
             }
         };
+        /**
+         * 加载特效
+         * @param laststate
+         * @param state 状态
+         */
         test_skillsystem.prototype.loadEffect = function (laststate, state) {
             var _this = this;
             var name = "fx_zs_male@attack_01";
@@ -19767,6 +21638,9 @@ var t;
             this.once1 = null;
             this.once2 = null;
         }
+        /**
+         * 加载声音信息
+         */
         test_sound.prototype.loadSoundInfe = function () {
             var _this = this;
             {
@@ -19941,6 +21815,11 @@ var t;
             this.WaveAmplitude = 0.05;
             this.play = true;
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         test_trailrenderrecorde.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -19948,6 +21827,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载文本数据
+         * @param laststate
+         * @param state 状态
+         */
         test_trailrenderrecorde.prototype.loadText = function (laststate, state) {
             this.app.getAssetMgr().load("res/trailtest2_00000.imgdesc.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -19974,6 +21858,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载角色模型
+         * @param laststate
+         * @param state 状态
+         */
         test_trailrenderrecorde.prototype.loadRole = function (laststate, state) {
             var _this = this;
             this.app.getAssetMgr().load("res/prefabs/0000_zs_male/0000_zs_male.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -19993,6 +21882,11 @@ var t;
                 }
             });
         };
+        /**
+         * 加载武器
+         * @param laststate
+         * @param state 状态
+         */
         test_trailrenderrecorde.prototype.loadWeapon = function (laststate, state) {
             var _this = this;
             this.app.getAssetMgr().load("res/prefabs/0002_sword_sword/0002_sword_sword.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -20010,6 +21904,11 @@ var t;
                 }
             });
         };
+        /**
+         * 初始化场景
+         * @param laststate
+         * @param state 状态
+         */
         test_trailrenderrecorde.prototype.initscene = function (laststate, state) {
             {
                 //添加一个摄像机
@@ -20153,6 +22052,13 @@ var t;
             //     this.org.markDirty();
             // }
         };
+        /**
+         * 添加按钮
+         * @param top 上位置
+         * @param left 左位置
+         * @param text 文本
+         * @returns html按钮组件
+         */
         test_trailrenderrecorde.prototype.addbtn = function (top, left, text) {
             var btn = document.createElement("button");
             btn.style.top = top;
@@ -20198,6 +22104,10 @@ var test_texuv = /** @class */ (function () {
         objCam.lookatPoint(new m4m.math.vector3());
         objCam.markDirty(); //标记为需要刷新
     };
+    /**
+     * 创建基础 cube模型
+     * @returns
+     */
     test_texuv.prototype.createBaseCube = function () {
         var mat = new m4m.framework.material();
         var shader = m4m.framework.sceneMgr.app.getAssetMgr().getShader("diffuse.shader.json");
@@ -20214,6 +22124,10 @@ var test_texuv = /** @class */ (function () {
         this.scene.addChild(trans);
         return trans;
     };
+    /**
+     * 创建UVcube
+     * @returns
+     */
     test_texuv.prototype.createUvCube = function () {
         var mat = new m4m.framework.material();
         var shader = m4m.framework.sceneMgr.app.getAssetMgr().getShader("testtexuv.shader.json");
@@ -20242,6 +22156,9 @@ var t;
             this.timer = 0;
             this.play = true;
         }
+        /**
+         * 初始化场景
+         */
         test_trailrender.prototype.initscene = function () {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -20310,6 +22227,9 @@ var t;
                 this.org.markDirty();
             }
         };
+        /**
+         * 添加GUI
+         */
         test_trailrender.prototype.addUI = function () {
             var _this = this;
             var tbn = this.addbtn("80px", "0px", "start");
@@ -20321,6 +22241,13 @@ var t;
                 _this.play = false;
             };
         };
+        /**
+         * 添加按钮
+         * @param top 上位置
+         * @param left 左位置
+         * @param text 文本
+         * @returns html按钮组件
+         */
         test_trailrender.prototype.addbtn = function (top, left, text) {
             var btn = document.createElement("button");
             btn.style.top = top;
@@ -20692,6 +22619,10 @@ var testUserCodeUpdate = /** @class */ (function () {
         m4m.math.quatFromAxisAngle(new m4m.math.vector3(0, 1, 0), this.timer, this.trans.localRotate);
         this.trans.markDirty();
     };
+    /**
+     * 是关闭的？
+     * @returns
+     */
     testUserCodeUpdate.prototype.isClosed = function () {
         return false;
     };
@@ -20712,12 +22643,22 @@ var t;
             this.totalframe = 9;
             this.fps = 2;
         }
+        /**
+         * 加载着色器
+         * @param laststate
+         * @param state 状态
+         */
         test_uvroll.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish)
                     state.finish = true;
             });
         };
+        /**
+         * 加载文本数据
+         * @param laststate
+         * @param state 状态
+         */
         test_uvroll.prototype.loadText = function (laststate, state) {
             this.app.getAssetMgr().load("res/uvSprite.png", m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish) {
@@ -20728,6 +22669,11 @@ var t;
                 }
             });
         };
+        /**
+         * 添加cube
+         * @param laststate
+         * @param state 状态
+         */
         test_uvroll.prototype.addcube = function (laststate, state) {
             //添加一个盒子
             {
@@ -20796,6 +22742,11 @@ var t;
             }
             state.finish = true;
         };
+        /**
+         * 添加相机
+         * @param laststate
+         * @param state 状态
+         */
         test_uvroll.prototype.addcam = function (laststate, state) {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -20874,6 +22825,11 @@ var util;
         });
     }
     util.loadRes = loadRes;
+    /**
+     * 加载着色器
+     * @param assetMgr 资源管理
+     * @returns Promise
+     */
     function loadShader(assetMgr) {
         return new Promise(function (resolve, reject) {
             assetMgr.load("".concat(resRootPath, "shader/shader.assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (_state) {
@@ -20884,6 +22840,12 @@ var util;
         });
     }
     util.loadShader = loadShader;
+    /**
+     * 加载模型prefab
+     * @param assetMgr 资源管理
+     * @param modelName 模型资源名
+     * @returns Promise<prefab>
+     */
     function loadModel(assetMgr, modelName) {
         return new Promise(function (resolve, reject) {
             assetMgr.load("".concat(resRootPath, "prefab/").concat(modelName, "/").concat(modelName, ".assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -20895,6 +22857,12 @@ var util;
         });
     }
     util.loadModel = loadModel;
+    /**
+     * 加载场景
+     * @param assetMgr 资源管理
+     * @param resName 资源名
+     * @returns Promise<rawscene>
+     */
     function loadScnee(assetMgr, resName) {
         return new Promise(function (resolve, reject) {
             assetMgr.load("".concat(resRootPath, "prefab/").concat(resName, "/").concat(resName, ".assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -20906,6 +22874,11 @@ var util;
         });
     }
     util.loadScnee = loadScnee;
+    /**
+     * 加载相机
+     * @param scene 引擎场景
+     * @returns
+     */
     function addCamera(scene) {
         //添加一个摄像机
         var objCam = new m4m.framework.transform();
@@ -20920,6 +22893,12 @@ var util;
         return objCam;
     }
     util.addCamera = addCamera;
+    /**
+     * 加载纹理
+     * @param url 资源url
+     * @param assetMgr 资源管理
+     * @returns Promise<texture>
+     */
     function loadTex(url, assetMgr) {
         return new Promise(function (resolve, reject) {
             assetMgr.load(url, m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -20936,6 +22915,12 @@ var util;
         });
     }
     util.loadTex = loadTex;
+    /**
+     * 加载纹理数组
+     * @param urls url列表
+     * @param assetMgr 资源管理
+     * @returns Promise<texture[]>
+     */
     function loadTextures(urls, assetMgr) {
         return Promise.all(urls.map(function (item) { return loadTex(item, assetMgr); }));
     }
@@ -21192,13 +23177,30 @@ var util;
         });
     }
     util.imageMergeToAtlas = imageMergeToAtlas;
+    /**
+     * 根据 shader 名 创建一个材质对象
+     * @param shaderName  shader 名
+     * @returns 材质
+     */
+    function makeMaterialByShaderName(shaderName) {
+        var app = m4m.framework.sceneMgr.app;
+        var sh = app.getAssetMgr().getShader(shaderName);
+        if (!sh) {
+            console.error("not find shader by shader name : ".concat(shaderName, " "));
+            return null;
+        }
+        var result = new m4m.framework.material();
+        result.setShader(sh);
+        return result;
+    }
+    util.makeMaterialByShaderName = makeMaterialByShaderName;
 })(util || (util = {}));
 //加载动作病简单使用动作的Dome
 var UseAniplayClipDemo = /** @class */ (function () {
     function UseAniplayClipDemo() {
         this.taskMgr = new m4m.framework.taskMgr();
     }
-    //加载一个动作
+    /** 加载一个动作 */
     UseAniplayClipDemo.prototype.loadAniplayClip = function (laststate, state) {
         this.app.getAssetMgr().load("res/prefabs/roles/pc2/Resources/pc2_skill1.FBAni.aniclip.bin", m4m.framework.AssetTypeEnum.Aniclip, function (s) {
             // if (s.isfinish) {
@@ -21215,7 +23217,7 @@ var UseAniplayClipDemo = /** @class */ (function () {
             // }
         });
     };
-    //#region  通过bundle包加载一个完整的带动作的角色。
+    /** 通过bundle包加载一个完整的带动作的角色。*/
     UseAniplayClipDemo.prototype.loadRole = function (laststate, state) {
         var _this = this;
         this.app.getAssetMgr().load("res/prefabs/roles/pc2/pc2.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -21255,8 +23257,7 @@ var UseAniplayClipDemo = /** @class */ (function () {
             }
         });
     };
-    //#endregion
-    //#region 加载shader
+    /*** 加载shader */
     UseAniplayClipDemo.prototype.loadShader = function (laststate, state) {
         this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
             if (s.iserror) {
@@ -21266,8 +23267,7 @@ var UseAniplayClipDemo = /** @class */ (function () {
                 state.finish = true;
         });
     };
-    //#endregion
-    //#region  添加摄像机
+    /** 添加摄像机 */
     UseAniplayClipDemo.prototype.addCamera = function (laststate, state) {
         var objCam = new m4m.framework.transform();
         objCam.name = "camera.";
@@ -21281,7 +23281,6 @@ var UseAniplayClipDemo = /** @class */ (function () {
         objCam.markDirty();
         state.finish = true;
     };
-    //#endregion
     UseAniplayClipDemo.prototype.start = function (app) {
         this.app = app;
         this.scene = app.getScene();
@@ -21351,7 +23350,7 @@ var UseAudioDemo = /** @class */ (function () {
     function UseAudioDemo() {
         this.taskMgr = new m4m.framework.taskMgr;
     }
-    //加载音频资源
+    /** 加载音频资源 */
     UseAudioDemo.prototype.loadAudio = function (laststate, state) {
         var _this = this;
         //加载音频资源，加载音频资源不是走assetMgr.load接口，而是使用AudioEx.instance().loadAudioBuffer()  AudioEX是一个单例。
@@ -21362,7 +23361,7 @@ var UseAudioDemo = /** @class */ (function () {
             state.finish = true;
         });
     };
-    //给摄像机添加一个音频收听者
+    /** 给摄像机添加一个音频收听者 */
     UseAudioDemo.prototype.addCamera = function (laststate, state) {
         //#region 添加一个相机
         var objCam = new m4m.framework.transform();
@@ -21381,7 +23380,7 @@ var UseAudioDemo = /** @class */ (function () {
         objCam.markDirty();
         state.finish = true;
     };
-    //添加一个音频AudioPlayer，
+    /** 添加一个音频AudioPlayer， */
     UseAudioDemo.prototype.addAudioPlay = function (laststate, state) {
         //#region 创建一个cube作为声音源
         var objAudioPlay = new m4m.framework.transform();
@@ -21399,7 +23398,7 @@ var UseAudioDemo = /** @class */ (function () {
         objAudioPlay.markDirty();
         state.finish = true;
     };
-    //#region 加载shader
+    /** 加载shader */
     UseAudioDemo.prototype.loadShader = function (laststate, state) {
         this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
             if (s.iserror) {
@@ -21439,7 +23438,7 @@ var UseF14EffectDemo = /** @class */ (function () {
     function UseF14EffectDemo() {
         this.taskMgr = new m4m.framework.taskMgr();
     }
-    //使用特效
+    /** 使用特效 */
     UseF14EffectDemo.prototype.useF14Effect = function () {
         //一个特效文件本质上是挂在了特效组件的一个空的transform。所以只要把这个带有特效的transform加在需要绑定特效的transform下即可。
         this.eff = this.app.getAssetMgr().getAssetByName("fx_B_5.prefab.json").getCloneTrans();
@@ -21450,7 +23449,7 @@ var UseF14EffectDemo = /** @class */ (function () {
         console.log(this.eff);
         console.log(this.effectSystems);
     };
-    //加载特效
+    /** 加载特效 */
     UseF14EffectDemo.prototype.loadF14Effect = function (laststate, state) {
         var _this = this;
         //加载特效一般都是加载打包号的特效包即可。
@@ -21461,15 +23460,15 @@ var UseF14EffectDemo = /** @class */ (function () {
             }
         });
     };
-    //播放特效
+    /**播放特效 */
     UseF14EffectDemo.prototype.playEffect = function () {
         //this.effectSystems.play(1.0);
     };
-    //停止特效
+    /** 停止特效 */
     UseF14EffectDemo.prototype.stopEffect = function () {
         this.effectSystems.stop();
     };
-    //#region 加入播放特效和停止的控制按钮
+    /** 加入播放特效和停止的控制按钮 */
     UseF14EffectDemo.prototype.addCtrl = function () {
         var _this = this;
         var play = document.createElement("button");
@@ -21492,7 +23491,7 @@ var UseF14EffectDemo = /** @class */ (function () {
         };
     };
     //#endregion
-    //#region 添加摄像机
+    /** 添加摄像机 */
     UseF14EffectDemo.prototype.addCamera = function (laststate, state) {
         var objCam = new m4m.framework.transform();
         objCam.name = "camera.";
@@ -21508,7 +23507,7 @@ var UseF14EffectDemo = /** @class */ (function () {
         state.finish = true;
     };
     //#endregion
-    //#region 加载shader
+    /** 加载shader */
     UseF14EffectDemo.prototype.loadShader = function (laststate, state) {
         this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
             if (s.iserror) {
@@ -21537,7 +23536,7 @@ var UseMeshAndMatDemo = /** @class */ (function () {
     function UseMeshAndMatDemo() {
         this.taskMgr = new m4m.framework.taskMgr;
     }
-    //加载一个mesh
+    /**加载一个mesh */
     UseMeshAndMatDemo.prototype.loadMesh = function (laststate, state) {
         this.app.getAssetMgr().load("res/prefabs/Cube/resources/Library_unity_default_resources_Cube.mesh.bin", m4m.framework.AssetTypeEnum.Mesh, function (s) {
             if (s.iserror) {
@@ -21549,7 +23548,7 @@ var UseMeshAndMatDemo = /** @class */ (function () {
             }
         });
     };
-    //加载一个mesh的材质资源
+    /**加载一个mesh的材质资源 */
     UseMeshAndMatDemo.prototype.loadMaterial = function (laststate, state) {
         this.app.getAssetMgr().load("res/prefabs/Cube/resources/Default-Diffuse.mat.json", m4m.framework.AssetTypeEnum.Material, function (s) {
             if (s.iserror) {
@@ -21561,7 +23560,11 @@ var UseMeshAndMatDemo = /** @class */ (function () {
             }
         });
     };
-    //新建一个cube 绑定加载的mesh资源和材质资源
+    /**
+     * 新建一个cube 绑定加载的mesh资源和材质资源
+     * @param laststate
+     * @param state 状态
+     */
     UseMeshAndMatDemo.prototype.useMeshAndMat = function (laststate, state) {
         var cube = new m4m.framework.transform();
         cube.name = "cube";
@@ -21578,7 +23581,11 @@ var UseMeshAndMatDemo = /** @class */ (function () {
         cube.markDirty();
         state.finish = true;
     };
-    //#region 加载shader
+    /**
+     * 加载着色器
+     * @param laststate
+     * @param state 状态
+     */
     UseMeshAndMatDemo.prototype.loadShader = function (laststate, state) {
         this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
             if (s.iserror) {
@@ -21588,8 +23595,11 @@ var UseMeshAndMatDemo = /** @class */ (function () {
                 state.finish = true;
         });
     };
-    //#endregion
-    //#region 添加一个摄像机
+    /**
+     * 添加一个摄像机
+     * @param laststate
+     * @param state 状态
+     */
     UseMeshAndMatDemo.prototype.addCamera = function (laststate, state) {
         var objCam = new m4m.framework.transform();
         objCam.name = "camera.";
@@ -21703,7 +23713,7 @@ var UseSceneDemo = /** @class */ (function () {
     function UseSceneDemo() {
         this.taskMgr = new m4m.framework.taskMgr();
     }
-    //使用通过asset加载出来的场景。
+    /**使用通过asset加载出来的场景。 */
     UseSceneDemo.prototype.useRawScene = function () {
         var raw = this.app.getAssetMgr().getAssetByName("MainCity_.scene.json");
         var root = raw.getSceneRoot();
@@ -21715,7 +23725,7 @@ var UseSceneDemo = /** @class */ (function () {
         this.scene.getRoot().markDirty();
         root.markDirty();
     };
-    //加载场景
+    /**加载场景 */
     UseSceneDemo.prototype.loadScene = function (laststate, state) {
         var _this = this;
         this.app.getAssetMgr().load("res/scenes/MainCity_/MainCity_.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
@@ -21790,7 +23800,12 @@ var UseTextureDemo = /** @class */ (function () {
         //#endregion
         this.addCtrl();
     };
-    //加载纹理，png .jpg纹理。用类似的操作可以加载 .pvr .pvr.bin pvr纹理资源  .dds .dds.bin dds纹理资源 和 .imgdesc.json 贴图资源，只需把AssetTypeEnum的类型 修改为 PVR,DDS和TextureDesc或者Auto即可。
+    /**
+     * 加载纹理
+     * 加载纹理，png .jpg纹理。用类似的操作可以加载 .pvr .pvr.bin pvr纹理资源  .dds .dds.bin dds纹理资源 和 .imgdesc.json 贴图资源，只需把AssetTypeEnum的类型 修改为 PVR,DDS和TextureDesc或者Auto即可。
+     * @param laststate
+     * @param state 状态
+     */
     UseTextureDemo.prototype.loadTexture = function (laststate, state) {
         var _this = this;
         this.app.getAssetMgr().load("res/zg256.png", m4m.framework.AssetTypeEnum.Texture, function (s) {
@@ -21801,7 +23816,9 @@ var UseTextureDemo = /** @class */ (function () {
             }
         });
     };
-    //使用纹理
+    /**
+     * 使用纹理
+     */
     UseTextureDemo.prototype.useTexture = function () {
         var render = this.quad.gameObject.getComponent("meshRenderer");
         console.log(this.texture);
@@ -21856,6 +23873,9 @@ var UseTextureDemo = /** @class */ (function () {
     };
     return UseTextureDemo;
 }());
+/**
+ * 相机控制器（测试）
+ */
 var Test_CameraController = /** @class */ (function () {
     function Test_CameraController() {
         this.moveSpeed = 10;
@@ -21874,20 +23894,36 @@ var Test_CameraController = /** @class */ (function () {
         }
         return Test_CameraController.g_this;
     };
+    /**
+     * 更新
+     * @param delta 帧间时间（s）
+     */
     Test_CameraController.prototype.update = function (delta) {
         if (this.beRightClick) {
             this.doMove(delta);
         }
     };
+    /**
+     * 添加相机
+     * @param camera 相机
+     */
     Test_CameraController.prototype.add = function (camera) {
         this.cameras.push(new m4m.framework.camera());
         this.cameras[this.cameras.length - 1] = camera;
     };
+    /**
+     * 判决相机
+     * @param target 相机
+     */
     Test_CameraController.prototype.decideCam = function (target) {
         this.target = target;
         this.rotAngle = new m4m.math.vector3();
         m4m.math.quatToEulerAngles(this.target.gameObject.transform.localRotate, this.rotAngle);
     };
+    /**
+     * 初始化
+     * @param app 引擎app
+     */
     Test_CameraController.prototype.init = function (app) {
         var _this = this;
         this.isInit = true;
@@ -21930,6 +23966,10 @@ var Test_CameraController = /** @class */ (function () {
             ev.preventDefault();
         };
     };
+    /**
+     * 执行移动
+     * @param delta 帧间时间（s）
+     */
     Test_CameraController.prototype.doMove = function (delta) {
         if (this.target == null)
             return;
@@ -21983,6 +24023,11 @@ var Test_CameraController = /** @class */ (function () {
         }
         this.target.gameObject.transform.markDirty();
     };
+    /**
+     * 执行旋转
+     * @param rotateX 旋转x
+     * @param rotateY 旋转y
+     */
     Test_CameraController.prototype.doRotate = function (rotateX, rotateY) {
         this.rotAngle.x += rotateY * this.rotateSpeed;
         this.rotAngle.y += rotateX * this.rotateSpeed;
@@ -21990,11 +24035,20 @@ var Test_CameraController = /** @class */ (function () {
         this.rotAngle.y %= 360;
         m4m.math.quatFromEulerAngles(this.rotAngle.x, this.rotAngle.y, this.rotAngle.z, this.target.gameObject.transform.localRotate);
     };
+    /**
+     * 注视
+     * @param trans 被注视对象
+     */
     Test_CameraController.prototype.lookat = function (trans) {
         this.target.gameObject.transform.lookat(trans);
         this.target.gameObject.transform.markDirty();
         m4m.math.quatToEulerAngles(this.target.gameObject.transform.localRotate, this.rotAngle);
     };
+    /**
+     * 检查 右键点击
+     * @param mouseEvent 鼠标点击事件
+     * @returns 是点击了？
+     */
     Test_CameraController.prototype.checkOnRightClick = function (mouseEvent) {
         var value = mouseEvent.button;
         if (value == 2) {
@@ -22008,6 +24062,11 @@ var Test_CameraController = /** @class */ (function () {
             return false;
         }
     };
+    /**
+     * 执行 鼠标中间滚动
+     * @param ev 中间滚动事件
+     * @param isFirefox 是Firefox ？
+     */
     Test_CameraController.prototype.doMouseWheel = function (ev, isFirefox) {
         if (!this.target)
             return;
@@ -22028,10 +24087,16 @@ var Test_CameraController = /** @class */ (function () {
             this.target.gameObject.transform.markDirty();
         }
     };
+    /**
+     * 移除
+     */
     Test_CameraController.prototype.remove = function () {
     };
     return Test_CameraController;
 }());
+/**
+ * 相机控制器
+ */
 var CameraController = /** @class */ (function () {
     function CameraController() {
         this.moveSpeed = 10;
@@ -22043,17 +24108,30 @@ var CameraController = /** @class */ (function () {
         this.isInit = false;
         this.moveVector = new m4m.math.vector3(0, 0, 1);
     }
+    /**
+     * 单实例对象
+     * @returns CameraController实例
+     */
     CameraController.instance = function () {
         if (CameraController.g_this == null) {
             CameraController.g_this = new CameraController();
         }
         return CameraController.g_this;
     };
+    /**
+     * 更新
+     * @param delta 帧间时间（s）
+     */
     CameraController.prototype.update = function (delta) {
         if (this.beRightClick) {
             this.doMove(delta);
         }
     };
+    /**
+     * 初始化
+     * @param app 引擎app
+     * @param target 相机
+     */
     CameraController.prototype.init = function (app, target) {
         var _this = this;
         this.isInit = true;
@@ -22096,6 +24174,10 @@ var CameraController = /** @class */ (function () {
             ev.preventDefault();
         };
     };
+    /**
+     * 执行移动
+     * @param delta  帧间时间（s）
+     */
     CameraController.prototype.doMove = function (delta) {
         if (this.target == null)
             return;
@@ -22149,6 +24231,11 @@ var CameraController = /** @class */ (function () {
         }
         this.target.gameObject.transform.markDirty();
     };
+    /**
+     * 执行旋转
+     * @param rotateX 旋转x
+     * @param rotateY 旋转y
+     */
     CameraController.prototype.doRotate = function (rotateX, rotateY) {
         this.rotAngle.x += rotateY * this.rotateSpeed;
         this.rotAngle.y += rotateX * this.rotateSpeed;
@@ -22156,11 +24243,20 @@ var CameraController = /** @class */ (function () {
         this.rotAngle.y %= 360;
         m4m.math.quatFromEulerAngles(this.rotAngle.x, this.rotAngle.y, this.rotAngle.z, this.target.gameObject.transform.localRotate);
     };
+    /**
+     * 执行注视
+     * @param trans 注视目标
+     */
     CameraController.prototype.lookat = function (trans) {
         this.target.gameObject.transform.lookat(trans);
         this.target.gameObject.transform.markDirty();
         m4m.math.quatToEulerAngles(this.target.gameObject.transform.localRotate, this.rotAngle);
     };
+    /**
+     * 检查 当鼠标右键点击
+     * @param mouseEvent 鼠标事件
+     * @returns 是点击？
+     */
     CameraController.prototype.checkOnRightClick = function (mouseEvent) {
         var value = mouseEvent.button;
         if (value == 2) {
@@ -22174,6 +24270,11 @@ var CameraController = /** @class */ (function () {
             return false;
         }
     };
+    /**
+     * 执行鼠标中间滚轮滚动
+     * @param ev 中间滚轮事件
+     * @param isFirefox 是Firefox？
+     */
     CameraController.prototype.doMouseWheel = function (ev, isFirefox) {
         if (!this.target)
             return;
@@ -22194,6 +24295,9 @@ var CameraController = /** @class */ (function () {
             this.target.gameObject.transform.markDirty();
         }
     };
+    /**
+     * 移除
+     */
     CameraController.prototype.remove = function () {
     };
     return CameraController;
@@ -22201,6 +24305,13 @@ var CameraController = /** @class */ (function () {
 var dome;
 (function (dome) {
     var GMesh = /** @class */ (function () {
+        /**
+         * GMesh
+         * @param mat 材质
+         * @param vCount 顶点数
+         * @param vf 顶点格式
+         * @param webgl webgl 上下文
+         */
         function GMesh(mat, vCount, vf, webgl) {
             this.currentVerteCount = 0;
             this.realVboLen = 0;
@@ -22234,11 +24345,20 @@ var dome;
             this.mesh = gmesh;
             this.vertexByteSize = gmesh.glMesh.vertexByteSize;
         }
+        /**
+         * 重置
+         */
         GMesh.prototype.reset = function () {
             this.currentVerteCount = 0;
             this.realVboLen = 0;
             this.realEboLen = 0;
         };
+        /**
+         * 上载mesh数据
+         * @param mat 矩阵
+         * @param mesh mesh
+         * @param webgl webgl上下文
+         */
         GMesh.prototype.uploadMeshData = function (mat, mesh, webgl) {
             var data = mesh.data;
             this.checkMeshCapacity(data.pos.length, data.trisindex.length, webgl);
@@ -22295,10 +24415,20 @@ var dome;
             this.currentVerteCount += vertexcount;
             this.mesh.submesh[0].size = this.realEboLen;
         };
+        /**
+         * 混合到GMesh
+         * @param webgl  webgl上下文
+         */
         GMesh.prototype.mixToGLmesh = function (webgl) {
             this.mesh.glMesh.uploadVertexData(webgl, this.vbodata);
             this.mesh.glMesh.uploadIndexData(webgl, 0, this.ebodata);
         };
+        /**
+         * 检查mesh 容量
+         * @param vertexcount 顶点数
+         * @param eboLen ebo 长度
+         * @param webgl webgl上下文
+         */
         GMesh.prototype.checkMeshCapacity = function (vertexcount, eboLen, webgl) {
             if (this.currentVerteCount + vertexcount > this.maxVerteCount) {
                 var needCount = this.currentVerteCount + vertexcount;
@@ -22341,6 +24471,10 @@ var dome;
             this.matinstance = {};
             this.mixmeshDic = {};
         }
+        /**
+         * 开始
+         * @param app 引擎app
+         */
         mixMesh.prototype.start = function (app) {
             var _this = this;
             this.app = app;
@@ -22385,6 +24519,10 @@ var dome;
             CameraController.instance().init(this.app, this.camera);
             objCam.markDirty(); //标记为需要刷新
         };
+        /**
+         * 刷新
+         * @returns
+         */
         mixMesh.prototype.refresh = function () {
             if (!this.flag)
                 return;
@@ -22409,6 +24547,10 @@ var dome;
                 // this.root.gameObject.visible = false;
             }
         };
+        /**
+         * 生成单obj
+         * @param target 目标
+         */
         mixMesh.prototype.generateSignelObs = function (target) {
             var level = target[0], obType = target[1], posx = target[2], posz = target[3], rotationy = target[4], trans = target[5]; // Access data chunk
             // if(level!=2||obType!=1) return;
@@ -22426,6 +24568,11 @@ var dome;
                 trans.gameObject.visiable = true;
             }
         };
+        /**
+         * 加载
+         * @param path 路径字符串
+         * @param cb 回调函数
+         */
         mixMesh.prototype.load = function (path, cb) {
             this.app.getAssetMgr().load(path, m4m.framework.AssetTypeEnum.Auto, function (s) {
                 if (s.isfinish && cb) {
@@ -22433,13 +24580,28 @@ var dome;
                 }
             });
         };
+        /**
+         * 加载预制体
+         * @param name 名
+         * @param cb 回调函数
+         */
         mixMesh.prototype.loadPrefab = function (name, cb) {
             this.load("res/prefabs/" + name + "/" + name + ".assetbundle.json", cb);
         };
+        /**
+         * 更新
+         * @param delta 帧间间隔时间
+         */
         mixMesh.prototype.update = function (delta) {
             CameraController.instance().update(delta);
             // this.refresh();
         };
+        /**
+         * 混合mesh
+         * @param targets 节点猎豹
+         * @param vf 顶点格式
+         * @returns
+         */
         mixMesh.prototype.mixMesh = function (targets, vf) {
             if (vf === void 0) { vf = m4m.render.VertexFormatMask.Position | m4m.render.VertexFormatMask.Normal | m4m.render.VertexFormatMask.Tangent | m4m.render.VertexFormatMask.UV0; }
             var nobatchArr = [];
@@ -22523,6 +24685,11 @@ var dome;
             this.taskmgr.addTaskCall(this.loadmesh.bind(this));
             this.taskmgr.addTaskCall(this.gamerun.bind(this));
         };
+        /**
+         * 加载shader
+         * @param laststate
+         * @param state 加载状态
+         */
         paowuxian.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("".concat(resRootPath, "shader/shader.assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -22530,6 +24697,11 @@ var dome;
                 }
             });
         };
+        /**
+         * 游戏运行
+         * @param laststate
+         * @param state 加载状态
+         */
         paowuxian.prototype.gamerun = function (laststate, state) {
             this.addcam();
             this.addcube();
@@ -22539,6 +24711,10 @@ var dome;
             this.camctr.setDistanceToTarget(2);
             this.camctr.setRotAngle(180, 30);
         };
+        /**
+         * 更新
+         * @param delta 帧间间隔时间
+         */
         paowuxian.prototype.update = function (delta) {
             this.taskmgr.move(delta);
             CameraController.instance().update(delta);
@@ -22612,7 +24788,7 @@ var dome;
             }
         };
         /**
-         *
+         * 检测目标
          * @param targets1 仅仅碰撞 碰撞盒子
          * @param targets2 先碰撞盒子再碰mesh
          * @param info
@@ -22667,6 +24843,12 @@ var dome;
         //     }
         //     return false;
         // }
+        /**
+         * 检测二次碰撞所有
+         * @param target 目标列表
+         * @param info 拾取信息
+         * @returns 有拾取到？
+         */
         paowuxian.prototype.detectSecond_Colliders = function (target, info) {
             var distancc = Number.MAX_VALUE;
             var picked = false;
@@ -22682,6 +24864,12 @@ var dome;
             }
             return picked;
         };
+        /**
+         * 检测二次碰撞
+         * @param target 目标
+         * @param info 拾取信息
+         * @returns 有拾取到？
+         */
         paowuxian.prototype.detectSecond_Collider = function (target, info) {
             if (this.beNeedRecompute) {
                 this.beNeedRecompute = false;
@@ -22696,6 +24884,12 @@ var dome;
             }
             return false;
         };
+        /**
+         * 检测二次碰撞 mesh列表
+         * @param target 目标列表
+         * @param info 拾取信息
+         * @returns 有拾取到？
+         */
         paowuxian.prototype.detectSecond_Meshs = function (target, info) {
             var distancc = Number.MAX_VALUE;
             var picked = false;
@@ -22711,6 +24905,12 @@ var dome;
             }
             return picked;
         };
+        /**
+         * 检测二次碰撞 mesh
+         * @param target 目标
+         * @param info 拾取信息
+         * @returns 有拾取到？
+         */
         paowuxian.prototype.detectSecond_Mesh = function (target, info) {
             if (this.beNeedRecompute) {
                 this.beNeedRecompute = false;
@@ -22729,6 +24929,14 @@ var dome;
             }
             return false;
         };
+        /**
+         * 检测线与碰撞器的碰撞
+         * @param start 线开始点
+         * @param end 线结束点
+         * @param targets 目标
+         * @param newtargets
+         * @returns 是碰撞？
+         */
         paowuxian.prototype.linedetectcollider = function (start, end, targets, newtargets) {
             var dir = new m4m.math.vector3();
             m4m.math.vec3Subtract(end, start, dir);
@@ -22765,6 +24973,9 @@ var dome;
                 }
             }
         };
+        /**
+         * 添加相机
+         */
         paowuxian.prototype.addcam = function () {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -22794,6 +25005,9 @@ var dome;
             objCam.markDirty(); //标记为需要刷新
             this.camctr = objCam.gameObject.addComponent("camCtr");
         };
+        /**
+         * 添加cube
+         */
         paowuxian.prototype.addcube = function () {
             // let cube0=new m4m.framework.transform();
             // cube0.localScale=new m4m.math.vector3(1000,0.01,1000);
@@ -22837,6 +25051,11 @@ var dome;
             this.middleTrans = this.addscaledCube(0.3);
             this.endTrans = this.addscaledCube(0.3);
         };
+        /**
+         * 添加缩放的cube
+         * @param scale 缩放值
+         * @returns
+         */
         paowuxian.prototype.addscaledCube = function (scale) {
             var cube4 = new m4m.framework.transform();
             this.cubes.push(cube4);
@@ -22847,11 +25066,25 @@ var dome;
             meshf4.mesh = this.assetmgr.getDefaultMesh("cube");
             return cube4;
         };
+        /**
+         * 获取方向
+         * @param euler 欧拉角
+         * @param dir 方向
+         */
         paowuxian.prototype.getDirByRotAngle = function (euler, dir) {
             var rot = new m4m.math.quaternion();
             m4m.math.quatFromEulerAngles(euler.x, euler.y, euler.z, rot);
             m4m.math.quatTransformVector(rot, m4m.math.pool.vector3_forward, dir);
         };
+        /**
+         * 获取mesh数据
+         * @param anglex 角度
+         * @param gravity 重力
+         * @param speed 速度
+         * @param paoLen 炮长度
+         * @param paojiaPosY 炮位置Y
+         * @returns mesh
+         */
         paowuxian.prototype.getMeshData = function (anglex, gravity, speed, paoLen, paojiaPosY) {
             if (paojiaPosY === void 0) { paojiaPosY = 0; }
             if (this.mesh == null) {
@@ -22898,6 +25131,15 @@ var dome;
             }
             return this.mesh;
         };
+        /**
+         * 初始化mesh
+         * @param anglex 角度
+         * @param gravity 重力
+         * @param speed 速度
+         * @param paoLen 炮长度
+         * @param paojiaPosY 炮位置Y
+         * @returns mesh
+         */
         paowuxian.prototype.initmesh = function (anglex, gravity, speed, paoLen, paojiaPosY) {
             if (paojiaPosY === void 0) { paojiaPosY = 0; }
             anglex = anglex * Math.PI / 180;
@@ -22955,6 +25197,9 @@ var dome;
             }
             return _mesh;
         };
+        /**
+         * 添加UI
+         */
         paowuxian.prototype.addUI = function () {
             var _this = this;
             var deltaangle = 3;
@@ -23006,6 +25251,9 @@ var dome;
                 }
             });
         };
+        /**
+         * 应用
+         */
         paowuxian.prototype.apply = function () {
             var target = new m4m.math.vector3();
             m4m.math.vec3Subtract(this.endTrans.localPosition, this.guiji.localPosition, target);
@@ -23014,6 +25262,13 @@ var dome;
             this.rotEuler.x = -1 * rotinfo.rotx;
             this.rotEuler.y = rotinfo.roty;
         };
+        /**
+         * 添加按钮
+         * @param text 文本
+         * @param x x
+         * @param y y
+         * @param func 触发函数
+         */
         paowuxian.prototype.addBtn = function (text, x, y, func) {
             var btn = document.createElement("button");
             btn.textContent = text;
@@ -23025,6 +25280,11 @@ var dome;
             btn.style.position = "absolute";
             this.app.container.appendChild(btn);
         };
+        /**
+         * 加载mesh
+         * @param laststate
+         * @param state 加载状态
+         */
         paowuxian.prototype.loadmesh = function (laststate, state) {
             var _this = this;
             var name = "box";
@@ -23053,6 +25313,14 @@ var dome;
                 }
             });
         };
+        /**
+         * 交叉检测
+         * @param LinePoints 线上的点
+         * @param mesh mesh
+         * @param matrix 矩阵
+         * @param outInfo 拾取到的信息
+         * @returns 是交叉了？
+         */
         paowuxian.prototype.intersects = function (LinePoints, mesh, matrix, outInfo) {
             var ishided = false;
             if (!mesh.submesh)
@@ -23101,6 +25369,13 @@ var dome;
             m4m.math.pool.delete_vector3Array(worldPosArr);
             return ishided;
         };
+        /**
+         * 交叉检测
+         * @param LinePoints 线上的点
+         * @param target 目标节点
+         * @param outInfo 拾取到的信息
+         * @returns 是交叉了？
+         */
         paowuxian.prototype.intersectCollider = function (LinePoints, target, outInfo) {
             var ishided = false;
             var lastDistance = Number.MAX_VALUE;
@@ -23127,6 +25402,15 @@ var dome;
             }
             return ishided;
         };
+        /**
+         * 获取旋转角度
+         * @param speed 速度
+         * @param h 高
+         * @param g 重力
+         * @param target 目标点
+         * @param forward 前方
+         * @returns 旋转角度
+         */
         paowuxian.prototype.getRotAnlge = function (speed, h, g, target, forward) {
             var L = Math.sqrt(target.x * target.x + target.z * target.z);
             var a = 0.5 * g * L * L / (speed * speed);
@@ -23145,6 +25429,13 @@ var dome;
                 return { rotx: _rotx, roty: _roty, canReach: true };
             }
         };
+        /**
+         * a 到 b 的旋转
+         * @param from a
+         * @param to b
+         * @param right r
+         * @returns 旋转
+         */
         paowuxian.prototype.fromToRotation = function (from, to, right) {
             var dir1 = m4m.math.pool.new_vector3();
             var dir2 = m4m.math.pool.new_vector3();
@@ -23172,15 +25463,29 @@ var dome;
             this.camrotAgnle = new m4m.math.vector3();
             this.targetpos = new m4m.math.vector3();
         }
+        /**
+         * 设置目标
+         * @param target 目标
+         * @param worldOffset 偏移
+         */
         camCtr.prototype.setTarget = function (target, worldOffset) {
             if (worldOffset === void 0) { worldOffset = null; }
             this._target = target;
             this._worldOffset = worldOffset;
         };
+        /**
+         * 设置旋转角
+         * @param yanle 角度y
+         * @param xangle 角度x
+         */
         camCtr.prototype.setRotAngle = function (yanle, xangle) {
             this.camrotAgnle.x = xangle;
             this.camrotAgnle.y = yanle;
         };
+        /**
+         * 设置目标的距离
+         * @param distance 距离
+         */
         camCtr.prototype.setDistanceToTarget = function (distance) {
             this._distance = distance;
         };
@@ -23276,6 +25581,11 @@ var dome;
             CameraController.instance().update(delta);
             this.gameupdate(delta);
         };
+        /**
+         * 加载shader
+         * @param laststate
+         * @param state 加载状态
+         */
         paowuxian2.prototype.loadShader = function (laststate, state) {
             this.app.getAssetMgr().load("".concat(resRootPath, "shader/shader.assetbundle.json"), m4m.framework.AssetTypeEnum.Auto, function (_state) {
                 if (_state.isfinish) {
@@ -23283,6 +25593,11 @@ var dome;
                 }
             });
         };
+        /**
+         * 加载mesh
+         * @param laststate
+         * @param state
+         */
         paowuxian2.prototype.loadmesh = function (laststate, state) {
             var _this = this;
             var name = "box";
@@ -23311,6 +25626,11 @@ var dome;
                 }
             });
         };
+        /**
+         * 添加相机
+         * @param laststate
+         * @param state 状态
+         */
         paowuxian2.prototype.addcam = function (laststate, state) {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -23328,6 +25648,11 @@ var dome;
             CameraController.instance().init(this.app, this.camera);
             state.finish = true;
         };
+        /**
+         * 初始化游戏
+         * @param laststate
+         * @param state 状态
+         */
         paowuxian2.prototype.gameInit = function (laststate, state) {
             var _this = this;
             this.paojia = this.addcube(new m4m.math.vector3(), new m4m.math.vector3(1, 1.0, 2.0));
@@ -23353,6 +25678,9 @@ var dome;
             state.finish = true;
         };
         //----------------------------------game scene asset------------------------------------------------
+        /**
+         * 添加炮弹的相机
+         */
         paowuxian2.prototype.addPaoDancam = function () {
             var objCam = new m4m.framework.transform();
             this.cam2 = objCam.gameObject;
@@ -23383,6 +25711,9 @@ var dome;
             raw_i2.image = this.assetmgr.getDefaultTexture("grid");
             this.rooto2d.addChild(raw_t2);
         };
+        /**
+         * 开火
+         */
         paowuxian2.prototype.fire = function () {
             var _this = this;
             this.pickScene(function (info) {
@@ -23392,10 +25723,17 @@ var dome;
                 _this.beforeRotatePaojia();
             });
         };
+        /**
+         * 开火发射子弹
+         */
         paowuxian2.prototype.fireBullet = function () {
             this.beLaunched = true;
             this.time = 0;
         };
+        /**
+         * 拾取场景
+         * @param fuc
+         */
         paowuxian2.prototype.pickScene = function (fuc) {
             var _this = this;
             var inputMgr = this.app.getInputMgr();
@@ -23405,11 +25743,19 @@ var dome;
                 fuc(info);
             });
         };
+        /**
+         * 游戏更新
+         * @param delta 间隔时间
+         */
         paowuxian2.prototype.gameupdate = function (delta) {
             this.updateBullet(delta);
             this.updateUI();
             this.updateRotPaojia(delta);
         };
+        /**
+         * 更新子弹
+         * @param delta 间隔时间
+         */
         paowuxian2.prototype.updateBullet = function (delta) {
             var _this = this;
             if (this.beLaunched) {
@@ -23447,6 +25793,9 @@ var dome;
                 }
             }
         };
+        /**
+         * 更新GUI
+         */
         paowuxian2.prototype.updateUI = function () {
             if (this.beUIFollow && this.paodan) {
                 var pos = this.paodan.getWorldPosition();
@@ -23455,6 +25804,9 @@ var dome;
                 this.testUI.markDirty();
             }
         };
+        /**
+         *  旋转炮角度
+         */
         paowuxian2.prototype.beforeRotatePaojia = function () {
             this.adjustMiddlePoint(this.paojia.getWorldPosition(), this.targetPos, this.middlePos);
             var dir = m4m.math.pool.new_vector3();
@@ -23472,6 +25824,10 @@ var dome;
             }
             m4m.math.pool.delete_vector3(dir);
         };
+        /**
+         * 更新旋转炮角度
+         * @param delta
+         */
         paowuxian2.prototype.updateRotPaojia = function (delta) {
             if (this.beActiveRot && this.rottime < this.rotTotalTime) {
                 this.rottime += delta;
@@ -23496,11 +25852,23 @@ var dome;
             }
         };
         //-----------------------------game util---------------------------------------------------------------------------------
+        /**
+         * 缩放和偏移
+         * @param from 开始
+         * @param scale 缩放
+         * @param add 偏移
+         * @param out 输出
+         */
         paowuxian2.prototype.scaleAndAdd = function (from, scale, add, out) {
             out.x = from.x * scale + add.x;
             out.y = from.y * scale + add.y;
             out.z = from.z * scale + add.z;
         };
+        /**
+         * 用射线检测场景
+         * @param ray 射线
+         * @param fuc 回调函数
+         */
         paowuxian2.prototype.rayInstersetScene = function (ray, fuc) {
             var bePickMesh = false;
             var infos = this.intersetColliders(ray, this.targets);
@@ -23531,6 +25899,13 @@ var dome;
                 m4m.math.pool.delete_pickInfo(infos[key]);
             }
         };
+        /**
+         * 检测mesh交叉
+         * @param ray 射线
+         * @param info 拾取信息
+         * @param tran 节点
+         * @returns 是否相交
+         */
         paowuxian2.prototype.intersetMesh = function (ray, info, tran) {
             var meshFilter = tran.gameObject.getComponent("meshFilter");
             if (meshFilter != null) {
@@ -23543,6 +25918,12 @@ var dome;
             }
             return false;
         };
+        /**
+         * 检测碰撞体交叉
+         * @param ray 射线
+         * @param trans 节点
+         * @returns 所有的拾取点
+         */
         paowuxian2.prototype.intersetColliders = function (ray, trans) {
             var infos = [];
             var info = m4m.math.pool.new_pickInfo();
@@ -23559,6 +25940,12 @@ var dome;
             });
             return infos;
         };
+        /**
+         * 添加cube
+         * @param pos 位置
+         * @param scale 缩放
+         * @returns cube节点
+         */
         paowuxian2.prototype.addcube = function (pos, scale) {
             if (scale === void 0) { scale = null; }
             var cube4 = new m4m.framework.transform();
@@ -23572,6 +25959,13 @@ var dome;
             meshf4.mesh = this.assetmgr.getDefaultMesh("cube");
             return cube4;
         };
+        /**
+         * 添加GUI按钮
+         * @param text 文本
+         * @param x 位置x
+         * @param y 位置y
+         * @param func 点击回调
+         */
         paowuxian2.prototype.addBtn = function (text, x, y, func) {
             var btn = document.createElement("button");
             btn.textContent = text;
@@ -23583,6 +25977,12 @@ var dome;
             btn.style.position = "absolute";
             this.app.container.appendChild(btn);
         };
+        /**
+         * 调整中间的点
+         * @param from 开始
+         * @param to 结束
+         * @param pos 输出位置
+         */
         paowuxian2.prototype.adjustMiddlePoint = function (from, to, pos) {
             var dis = m4m.math.vec3Distance(from, to);
             //----lerp
@@ -23592,6 +25992,14 @@ var dome;
             // let upy=10;
             pos.y += dis * 0.5;
         };
+        /**
+         * 计算贝塞尔曲线上的点
+         * @param from 开始
+         * @param middle 中间
+         * @param to 结束
+         * @param t 进度值
+         * @param out 输出点
+         */
         paowuxian2.prototype.bessel = function (from, middle, to, t, out) {
             //out=from*(1-t)^2+middle*2t(1-t)+to*t^2
             var p1 = Math.pow(1 - t, 2);
@@ -23601,6 +26009,14 @@ var dome;
             out.y = from.y * p1 + middle.y * p2 + to.y * p3;
             out.z = from.z * p1 + middle.z * p2 + to.z * p3;
         };
+        /**
+         * 获取贝塞尔的方向
+         * @param from  开始
+         * @param middle 中间
+         * @param to 结束
+         * @param t 进度值
+         * @param out 输出方向
+         */
         paowuxian2.prototype.getBeselDir = function (from, middle, to, t, out) {
             //out=from*2*(1-t)*(-1)+middle*2(1-2t)+to*2t
             var p1 = -1 * 2 * (1 - t);
@@ -23610,6 +26026,12 @@ var dome;
             out.y = from.y * p1 + middle.y * p2 + to.y * p3;
             out.z = from.z * p1 + middle.z * p2 + to.z * p3;
         };
+        /**
+         * 通过方向获取旋转
+         * @param dir 方向
+         * @param forward 前方
+         * @param out 输出
+         */
         paowuxian2.prototype.getRotationByDir = function (dir, forward, out) {
             var tana = dir.y / Math.sqrt(dir.x * dir.x + dir.z * dir.z);
             var _rotx = Math.atan(tana) * 180 / Math.PI;
@@ -23618,6 +26040,12 @@ var dome;
             var _roty = this.fromToRotation(forward, dir, m4m.math.pool.vector3_right);
             m4m.math.quatFromEulerAngles(-1 * _rotx, _roty, 0, out);
         };
+        /**
+         * 获取旋转角度
+         * @param dir 方向
+         * @param forward 前方
+         * @returns 输出角度
+         */
         paowuxian2.prototype.getRotAnlge = function (dir, forward) {
             var tana = dir.y / Math.sqrt(dir.x * dir.x + dir.z * dir.z);
             var _rotx = Math.atan(tana) * 180 / Math.PI;
@@ -23626,6 +26054,13 @@ var dome;
             var _roty = this.fromToRotation(forward, dir, m4m.math.pool.vector3_right);
             return { rotx: _rotx, roty: _roty };
         };
+        /**
+         * 计算从a到b 的旋转
+         * @param from a向量
+         * @param to b向量
+         * @param right 输出
+         * @returns 旋转度
+         */
         paowuxian2.prototype.fromToRotation = function (from, to, right) {
             var dir1 = m4m.math.pool.new_vector3();
             var dir2 = m4m.math.pool.new_vector3();
@@ -23672,6 +26107,11 @@ var physic2d_dome = /** @class */ (function () {
         this.taskmgr.addTaskCall(this.loadTexture.bind(this));
         this.taskmgr.addTaskCall(this.createUI.bind(this));
     };
+    /**
+     * 创建GUI
+     * @param astState
+     * @param state 状态
+     */
     physic2d_dome.prototype.createUI = function (astState, state) {
         var atlasComp = this.assetMgr.getAssetByName("comp.atlas.json");
         var tex_0 = this.assetMgr.getAssetByName("zg03_256.png");
@@ -23686,6 +26126,16 @@ var physic2d_dome = /** @class */ (function () {
         this.crea2dWall(wallWidth / 2, wallheigth, wallWidth, 50, tex_0, this.rooto2d);
         state.finish = true;
     };
+    /**
+     * 创建2d的物理墙
+     * @param posx
+     * @param posy
+     * @param width
+     * @param height
+     * @param texture
+     * @param root
+     * @returns
+     */
     physic2d_dome.prototype.crea2dWall = function (posx, posy, width, height, texture, root) {
         var bound3 = new m4m.framework.transform2D;
         bound3.localTranslate.x = posx;
@@ -23701,6 +26151,16 @@ var physic2d_dome = /** @class */ (function () {
         root.addChild(bound3);
         return bound3;
     };
+    /**
+     * 创建 2d的 盒子
+     * @param posx 位置x
+     * @param posy 位置y
+     * @param width 宽
+     * @param height 高
+     * @param texture 纹理
+     * @param root root节点
+     * @returns 盒子节点
+     */
     physic2d_dome.prototype.creatbox = function (posx, posy, width, height, texture, root) {
         var bound3 = new m4m.framework.transform2D;
         bound3.localTranslate.x = posx;
@@ -23718,6 +26178,11 @@ var physic2d_dome = /** @class */ (function () {
         root.addChild(bound3);
         return bound3;
     };
+    /**
+     * 加载纹理
+     * @param lastState
+     * @param state 状态
+     */
     physic2d_dome.prototype.loadTexture = function (lastState, state) {
         var _this = this;
         //加载图片资源
@@ -23810,6 +26275,11 @@ var dome;
                 .then(function () { return _this.addCamera(); })
                 .then(function () { return _this.addUI(); });
         };
+        /**
+         * 加载特效和prefab
+         * @param name 资源名
+         * @returns
+         */
         db_test_f14eff.prototype.loadEffectPrefab = function (name) {
             var _this = this;
             if (name === void 0) { name = "fx_yh"; }
@@ -23828,10 +26298,16 @@ var dome;
                 });
             });
         };
+        /**
+         * 添加GUI
+         */
         db_test_f14eff.prototype.addUI = function () {
             this.addButton();
             this.addButton2();
         };
+        /**
+         * 添加按钮
+         */
         db_test_f14eff.prototype.addButton = function () {
             var _this = this;
             var btn = document.createElement("button");
@@ -23843,6 +26319,9 @@ var dome;
             btn.style.position = "absolute";
             this.app.container.appendChild(btn);
         };
+        /**
+         * 添加按钮
+         */
         db_test_f14eff.prototype.addButton2 = function () {
             var _this = this;
             var btn = document.createElement("button");
@@ -23854,6 +26333,9 @@ var dome;
             btn.style.position = "absolute";
             this.app.container.appendChild(btn);
         };
+        /**
+         * 添加相机
+         */
         db_test_f14eff.prototype.addCamera = function () {
             //添加一个摄像机
             var objCam = new m4m.framework.transform();
@@ -23888,6 +26370,11 @@ var test_ChangeMaterial = /** @class */ (function () {
         this.isMaterial1 = false;
         this.zeroPoint = new m4m.math.vector3(0, 0, 0);
     }
+    /**
+     * 加载着色器
+     * @param laststate
+     * @param state 状态
+     */
     test_ChangeMaterial.prototype.loadShader = function (laststate, state) {
         this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (s) {
             if (s.isfinish) {
@@ -23895,6 +26382,11 @@ var test_ChangeMaterial = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载纹理
+     * @param laststate
+     * @param state 状态
+     */
     test_ChangeMaterial.prototype.loadTexture = function (laststate, state) {
         var c = 0;
         c++;
@@ -23919,6 +26411,11 @@ var test_ChangeMaterial = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 添加相机
+     * @param laststate
+     * @param state 状态
+     */
     test_ChangeMaterial.prototype.addCam = function (laststate, state) {
         //添加一个相机
         var objCam = new m4m.framework.transform;
@@ -23933,6 +26430,11 @@ var test_ChangeMaterial = /** @class */ (function () {
         console.log("add camera");
         state.finish = true;
     };
+    /**
+     * 添加cube
+     * @param laststate
+     * @param state 状态
+     */
     test_ChangeMaterial.prototype.addCube = function (laststate, state) {
         //添加一个Cube
         var cube = new m4m.framework.transform();
@@ -23947,6 +26449,9 @@ var test_ChangeMaterial = /** @class */ (function () {
         console.log("add cube");
         state.finish = true;
     };
+    /**
+     * 添加GUI按钮
+     */
     test_ChangeMaterial.prototype.addBtn = function () {
         var _this = this;
         //创建一个button，控制material的切换
@@ -23971,6 +26476,11 @@ var test_ChangeMaterial = /** @class */ (function () {
         btn1.style.position = "absolute";
         this.app.container.appendChild(btn1);
     };
+    /**
+     * 设置材质
+     * @param laststate
+     * @param state 状态
+     */
     test_ChangeMaterial.prototype.setMaterial = function (laststate, state) {
         var shader1 = this.app.getAssetMgr().getShader("diffuse.shader.json");
         if (shader1 != null) {
@@ -24141,6 +26651,11 @@ var test_Sound = /** @class */ (function () {
         this.taskmgr = new m4m.framework.taskMgr();
         this.time = 0;
     }
+    /**
+     * 加载着色器
+     * @param laststate
+     * @param state 状态
+     */
     test_Sound.prototype.loadShader = function (laststate, state) {
         this.app.getAssetMgr().load("res/shader/shader.assetbundle.json", m4m.framework.AssetTypeEnum.Auto, function (_state) {
             if (_state.isfinish) {
@@ -24151,6 +26666,11 @@ var test_Sound = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 加载纹理
+     * @param laststate
+     * @param state 状态
+     */
     test_Sound.prototype.loadTexture = function (laststate, state) {
         this.app.getAssetMgr().load("res/zg256.png", m4m.framework.AssetTypeEnum.Auto, function (_state) {
             if (_state.isfinish) {
@@ -24161,6 +26681,11 @@ var test_Sound = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 添加相机
+     * @param laststate
+     * @param state 状态
+     */
     test_Sound.prototype.addCam = function (laststate, state) {
         var objCam = new m4m.framework.transform();
         objCam.name = "Main Camera";
@@ -24173,6 +26698,11 @@ var test_Sound = /** @class */ (function () {
         objCam.markDirty();
         state.finish = true;
     };
+    /**
+     * 添加cube
+     * @param laststate
+     * @param state 状态
+     */
     test_Sound.prototype.addCube = function (laststate, state) {
         var objCube = new m4m.framework.transform();
         objCube.name = "Cube";
@@ -24195,6 +26725,11 @@ var test_Sound = /** @class */ (function () {
         this.cube.markDirty();
         state.finish = true;
     };
+    /**
+     * 添加按钮加载声音
+     * @param laststate
+     * @param state 状态
+     */
     test_Sound.prototype.addBtnLoadSound = function (laststate, state) {
     };
     test_Sound.prototype.start = function (app) {
@@ -24310,14 +26845,23 @@ var m4m;
                 this.gameObject.transform.markDirty();
                 m4m.math.pool.delete_vector3(tempv3);
             };
+            /**
+             * 当输入点下
+             */
             HoverCameraScript.prototype.onPointDown = function () {
                 this._mouseDown = true;
                 this._lastMouseX = this.inputMgr.point.x;
                 this._lastMouseY = this.inputMgr.point.y;
             };
+            /**
+             * 当输入点下后释放
+             */
             HoverCameraScript.prototype.onPointUp = function () {
                 this._mouseDown = false;
             };
+            /**
+             * 当输入点移动
+             */
             HoverCameraScript.prototype.onPointMove = function () {
                 if (!this._mouseDown)
                     return;
@@ -24340,9 +26884,16 @@ var m4m;
                 this._lastMouseX = this.inputMgr.point.x;
                 this._lastMouseY = this.inputMgr.point.y;
             };
+            /**
+             * 当鼠标滚动
+             */
             HoverCameraScript.prototype.onWheel = function () {
                 this.distance = Math.max(this.distance - this.inputMgr.wheel * 2, 1);
             };
+            /**
+             * 当输入触摸
+             * @param ev 触摸事件
+             */
             HoverCameraScript.prototype.onTouch = function (ev) {
                 var _this = this;
                 if (ev.targetTouches.length == 1) {
@@ -24360,6 +26911,10 @@ var m4m;
                     this.lastTouches = touches;
                 }
             };
+            /**
+             * 当触摸移动
+             * @param ev
+             */
             HoverCameraScript.prototype.onTouchMove = function (ev) {
                 var _this = this;
                 var _a, _b;
@@ -24424,6 +26979,9 @@ var m4m;
                     this.lastTouches = touches;
                 }
             };
+            /**
+             * 移除所有输入事件监听
+             */
             HoverCameraScript.prototype.remove = function () {
                 this.inputMgr.removePointListener(m4m.event.PointEventEnum.PointDown, this.onPointDown, this);
                 this.inputMgr.removePointListener(m4m.event.PointEventEnum.PointUp, this.onPointUp, this);
@@ -24566,6 +27124,12 @@ var decalCreater = /** @class */ (function (_super) {
         mr.materials[0] = mat;
         return d.meshF.gameObject.transform;
     };
+    /**
+     * 计算世界空间法线向量
+     * @param pinfo 拾取点信息
+     * @param mf mesh组件
+     * @param result 输出世界空间法线向量
+     */
     decalCreater.prototype.calecWorldNormal = function (pinfo, mf, result) {
         var fid = pinfo.faceId;
         var md = mf.mesh.data;
@@ -24589,6 +27153,12 @@ var decalCreater = /** @class */ (function (_super) {
         m4m.math.vec3Normalize(nor, result);
         // console.log(`nor  : ${nor.toString()}`);
     };
+    /**
+     * 计算旋转
+     * @param dir 方向
+     * @param pinfo 拾取点信息
+     * @param result 输出旋转四元数
+     */
     decalCreater.prototype.calecRoation = function (dir, pinfo, result) {
         var lookpoint = decalCreater_1.helpv3;
         m4m.math.vec3Clone(dir, lookpoint);
@@ -24601,6 +27171,13 @@ var decalCreater = /** @class */ (function (_super) {
         m4m.math.quatFromAxisAngle(dir, rAg, decalCreater_1.helpqaut);
         m4m.math.quatMultiply(decalCreater_1.helpqaut, result, result);
     };
+    /**
+     * 计算view 修正
+     * @param _camera 相机
+     * @param app 引擎app
+     * @param screenPos 屏幕空间位置
+     * @param result 输出位置
+     */
     decalCreater.multipleViewFix = function (_camera, app, screenPos, result) {
         var vp = _camera.viewport;
         var offset_x = app.width * vp.x;
@@ -24637,6 +27214,14 @@ var decalCreater = /** @class */ (function (_super) {
  * 贴花几何体
  */
 var decalGeometry = /** @class */ (function () {
+    /**
+     * 贴花几何体
+     * @param tragetMeshf meshFilter
+     * @param position 位置
+     * @param orientation 旋转
+     * @param size 尺寸
+     * @param webgl webgl上下文
+     */
     function decalGeometry(tragetMeshf, position, orientation, size, webgl) {
         var _this = this;
         this.tragetMeshf = tragetMeshf;
@@ -24703,6 +27288,9 @@ var decalGeometry = /** @class */ (function () {
         this.meshF = outTran.gameObject.addComponent("meshFilter");
         this.meshF.mesh = this.mesh;
     }
+    /**
+     * 生成
+     */
     decalGeometry.prototype.generate = function () {
         var decalVertices = [];
         var vertex = new m4m.math.vector3();
@@ -24746,6 +27334,12 @@ var decalGeometry = /** @class */ (function () {
                 this.normals.push(m4m.math.pool.clone_vector3(dNor));
         }
     };
+    /**
+     * 存贴花mesh 顶点数据
+     * @param decalVertices 贴花顶点
+     * @param vertex 顶点位置
+     * @param normal 法线
+     */
     decalGeometry.prototype.pushDecalVertex = function (decalVertices, vertex, normal) {
         var pos = m4m.math.pool.clone_vector3(vertex);
         var nor;
@@ -24757,6 +27351,12 @@ var decalGeometry = /** @class */ (function () {
         m4m.math.matrixTransformVector3(pos, this.projectorMatrixInverse, pos);
         decalVertices.push(new DecalVertex(pos, nor));
     };
+    /**
+     * 修剪 几何图形
+     * @param inVertices 贴花顶点列表
+     * @param plane
+     * @returns
+     */
     decalGeometry.prototype.clipGeometry = function (inVertices, plane) {
         var outVertices = [];
         var s = 0.5 * Math.abs(m4m.math.vec3Dot(this.size, plane));
@@ -24852,6 +27452,14 @@ var decalGeometry = /** @class */ (function () {
         }
         return outVertices;
     };
+    /**
+     * 修剪顶点
+     * @param v0 顶点0
+     * @param v1 顶点1
+     * @param p 位置
+     * @param s
+     * @returns
+     */
     decalGeometry.prototype.clip = function (v0, v1, p, s) {
         var d0 = m4m.math.vec3Dot(p, v0.position) - s;
         var d1 = m4m.math.vec3Dot(p, v1.position) - s;
@@ -24872,6 +27480,11 @@ var decalGeometry = /** @class */ (function () {
     return decalGeometry;
 }());
 var DecalVertex = /** @class */ (function () {
+    /**
+     * 贴花 顶点
+     * @param position 坐标
+     * @param normal 法线
+     */
     function DecalVertex(position, normal) {
         this.position = position;
         this.normal = normal;
@@ -24945,7 +27558,9 @@ var guideMask = /** @class */ (function (_super) {
         m4m.math.pool.delete_rect(this._holeRect);
         this._holeRect = null;
     };
-    //刷新 mask
+    /**
+     * 刷新 mask
+     */
     guideMask.prototype.refreshMask = function () {
         if (!this.inited)
             return;
@@ -25116,6 +27731,9 @@ var TaskManager = /** @class */ (function () {
 var datGui = /** @class */ (function () {
     function datGui() {
     }
+    /**
+     * 初始化
+     */
     datGui.init = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -25129,7 +27747,10 @@ var datGui = /** @class */ (function () {
             });
         });
     };
-    //加载 js
+    /**
+     * 加载 js
+     * @returns Promise
+     */
     datGui.loadJs = function () {
         var datUrl = "./lib/dat.gui.js";
         return util.loadJSLib(datUrl);
@@ -25170,6 +27791,12 @@ var datGui = /** @class */ (function () {
 var demoTool = /** @class */ (function () {
     function demoTool() {
     }
+    /**
+     * 加载
+     * @param url 资源
+     * @param astMgr 资源管理器
+     * @returns Promise
+     */
     demoTool.loadbySync = function (url, astMgr) {
         return new m4m.threading.gdPromise(function (resolve, reject) {
             astMgr.load(url, m4m.framework.AssetTypeEnum.Auto, function (state) {
@@ -25185,6 +27812,10 @@ var demoTool = /** @class */ (function () {
 var physics3dDemoTool = /** @class */ (function () {
     function physics3dDemoTool() {
     }
+    /**
+     * 初始化
+     * @param app 引擎app
+     */
     physics3dDemoTool.init = function (app) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -25217,6 +27848,9 @@ var physics3dDemoTool = /** @class */ (function () {
     //         });
     //     });
     // }
+    /**
+     * 初始化所有材质
+     */
     physics3dDemoTool.initMats = function () {
         //地板
         this.addMat("white", new m4m.math.vector4(1, 1, 1, 1));
@@ -25230,6 +27864,9 @@ var physics3dDemoTool = /** @class */ (function () {
         //purple
         this.addMat("purple", new m4m.math.vector4(0.8, 0, 0.8, 1));
     };
+    /**
+     * 初始化相机
+     */
     physics3dDemoTool.initCamera = function () {
         //相机-----------------------------------
         var objCam = new m4m.framework.transform();
@@ -25257,6 +27894,11 @@ var physics3dDemoTool = /** @class */ (function () {
         lComp.type = m4m.framework.LightTypeEnum.Direction;
         this.scene.addChild(light);
     };
+    /**
+     * 添加材质
+     * @param name 名
+     * @param color 颜色
+     */
     physics3dDemoTool.addMat = function (name, color) {
         var _this = this;
         var mat = this.mats[name] = new m4m.framework.material(name);
@@ -25273,6 +27915,14 @@ var physics3dDemoTool = /** @class */ (function () {
             });
         }
     };
+    /**
+     * 附加到mesh上
+     * @param tran 节点
+     * @param mat 材质
+     * @param meshName mesh名
+     * @param isCompound 是复合模式？
+     * @returns mesh渲染器
+     */
     physics3dDemoTool.attachMesh = function (tran, mat, meshName, isCompound) {
         var _this = this;
         if (isCompound === void 0) { isCompound = false; }
@@ -25306,7 +27956,10 @@ var physics3dDemoTool = /** @class */ (function () {
         };
         return mr;
     };
-    //重置 复位
+    /**
+     * 重置 复位
+     * @param mrs 所有渲染器节点
+     */
     physics3dDemoTool.resetObj = function (mrs) {
         var _this = this;
         mrs.forEach(function (mr) {
@@ -25317,6 +27970,10 @@ var physics3dDemoTool = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 检查物理体 是否睡眠
+     * @param mrs 所有渲染器
+     */
     physics3dDemoTool.ckBodySleeped = function (mrs) {
         var _this = this;
         mrs.forEach(function (mr) {
@@ -25336,6 +27993,11 @@ var physics3dDemoTool = /** @class */ (function () {
             }
         });
     };
+    /**
+     * 改变默认材质
+     * @param mr 渲染器
+     * @param isSleeping 是睡眠了？
+     */
     physics3dDemoTool.cgDefMat = function (mr, isSleeping) {
         if (!mr)
             return;
