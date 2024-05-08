@@ -1700,6 +1700,9 @@ var mini_sample = /** @class */ (function () {
 /** 实时阴影样例 */
 var realtimeShadow = /** @class */ (function () {
     function realtimeShadow() {
+        this._texFiles = ["LightAnchor_Icon.png"];
+        this._texUrls = this._texFiles.map(function (val, i, arr) { return "".concat(resRootPath, "texture/").concat(val); });
+        this._tex = [];
     }
     realtimeShadow.prototype.changeMaterial = function (node, col) {
         var mr = node.gameObject.renderer;
@@ -1735,19 +1738,11 @@ var realtimeShadow = /** @class */ (function () {
     };
     realtimeShadow.prototype.start = function (app) {
         return __awaiter(this, void 0, void 0, function () {
-            var scene, objDirLight, dirRotate, dirLight, objCam, cam, hoverc;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            var scene, objCam, cam, hoverc, objDirLight, dirRotate, dirLight, _a, objDirLightGizmo, dirLightGizmo;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
                         scene = app.getScene();
-                        objDirLight = new m4m.framework.transform();
-                        scene.addChild(objDirLight);
-                        objDirLight.setWorldPosition(new m4m.math.vector3(0.5, 5, 0));
-                        dirRotate = new m4m.math.quaternion();
-                        m4m.math.quat2Lookat(objDirLight.getWorldPosition(), new m4m.math.vector4(), dirRotate);
-                        objDirLight.setWorldRotate(dirRotate);
-                        dirLight = objDirLight.gameObject.addComponent("light");
-                        dirLight.type = m4m.framework.LightTypeEnum.Direction;
                         objCam = new m4m.framework.transform();
                         scene.addChild(objCam);
                         cam = objCam.gameObject.addComponent("camera");
@@ -1762,11 +1757,29 @@ var realtimeShadow = /** @class */ (function () {
                         hoverc.distance = 30;
                         hoverc.scaleSpeed = 0.1;
                         hoverc.lookAtPoint = new m4m.math.vector3(0, 2.5, 0);
+                        objDirLight = new m4m.framework.transform();
+                        scene.addChild(objDirLight);
+                        objDirLight.setWorldPosition(new m4m.math.vector3(0.5, 15, 0));
+                        dirRotate = new m4m.math.quaternion();
+                        m4m.math.quat2Lookat(objDirLight.getWorldPosition(), new m4m.math.vector4(), dirRotate);
+                        objDirLight.setWorldRotate(dirRotate);
+                        dirLight = objDirLight.gameObject.addComponent("light");
+                        dirLight.type = m4m.framework.LightTypeEnum.Direction;
+                        //方向光开实时阴影
                         //load res
                         return [4 /*yield*/, util.loadShader(app.getAssetMgr())];
                     case 1:
+                        //方向光开实时阴影
                         //load res
-                        _a.sent();
+                        _b.sent();
+                        _a = this;
+                        return [4 /*yield*/, util.loadTextures(this._texUrls, app.getAssetMgr())];
+                    case 2:
+                        _a._tex = _b.sent();
+                        objDirLightGizmo = new m4m.framework.transform();
+                        objDirLight.addChild(objDirLightGizmo);
+                        dirLightGizmo = objDirLightGizmo.gameObject.addComponent("iconGizmo");
+                        dirLightGizmo.setTex(this._tex[0]);
                         //scene objs
                         this.makeSeceneObjects(app);
                         return [2 /*return*/];
@@ -26999,6 +27012,108 @@ var m4m;
         framework.HoverCameraScript = HoverCameraScript;
     })(framework = m4m.framework || (m4m.framework = {}));
 })(m4m || (m4m = {}));
+/** 场景附着 icon */
+var iconGizmo = /** @class */ (function (_super) {
+    __extends(iconGizmo, _super);
+    function iconGizmo() {
+        var _this = _super !== null && _super.apply(this, arguments) || this;
+        _this._size = 1;
+        _this._alpha = 1;
+        _this._asp = 1;
+        _this._color = new m4m.math.vector4(1, 1, 1, 1);
+        return _this;
+    }
+    Object.defineProperty(iconGizmo.prototype, "size", {
+        get: function () { return this._size; },
+        set: function (val) {
+            if (this._size == val)
+                return;
+            this._size = val;
+            this.setRealSize();
+        },
+        enumerable: false,
+        configurable: true
+    });
+    iconGizmo.prototype.setAlpha = function (alpha) {
+        var a = alpha;
+        if (isNaN(alpha))
+            a = 1;
+        this._color.w = a < 0 ? 0 : a > 1 ? 1 : a;
+        this._alpha = this._color.w;
+        this.setColor();
+    };
+    iconGizmo.prototype.setTex = function (tex) {
+        this._tex = tex;
+        if (tex) {
+            this._asp = tex.glTexture.height / tex.glTexture.width;
+        }
+        var mat = this.getMaterial();
+        if (!mat)
+            return;
+        mat.setTexture("_MainTex", tex);
+        this.setRealSize();
+    };
+    iconGizmo.prototype.onPlay = function () {
+        this.tryAttachIcon();
+    };
+    iconGizmo.prototype.update = function (delta) {
+        this.lookAtMainCamera();
+    };
+    iconGizmo.prototype.remove = function () {
+        if (this._renderer)
+            this._renderer = null;
+        if (this._color)
+            this._color = null;
+        if (this._tex) {
+            this._tex.unuse();
+            this._tex = null;
+        }
+    };
+    iconGizmo.prototype.setRealSize = function () {
+        var tran = this.gameObject.transform;
+        var s = tran.localScale;
+        m4m.math.vec3Set(s, this._size, this._size * this._asp, 1);
+        tran.localScale = s;
+    };
+    iconGizmo.prototype.setColor = function () {
+        var mat = this.getMaterial();
+        if (!mat)
+            return;
+        mat.setVector4("_MainColor", this._color);
+    };
+    iconGizmo.prototype.getMaterial = function () {
+        if (!this._renderer || !this._renderer.materials || this._renderer.materials.length < 0)
+            return null;
+        return this._renderer.materials[0];
+    };
+    iconGizmo.prototype.lookAtMainCamera = function () {
+        var scene = m4m.framework.sceneMgr.scene;
+        var mainCam = scene.mainCamera;
+        if (mainCam == null)
+            return;
+        var tran = this.gameObject.transform;
+        var rot = tran.getWorldRotate();
+        m4m.math.quatLookat(tran.getWorldPosition(), mainCam.gameObject.transform.getWorldPosition(), rot);
+        tran.setWorldRotate(rot);
+    };
+    iconGizmo.prototype.tryAttachIcon = function () {
+        if (this._renderer && this._renderer == this.gameObject.renderer)
+            return;
+        var app = m4m.framework.sceneMgr.app;
+        this._renderer = this.gameObject.addComponent("meshRenderer");
+        var mf = this.gameObject.addComponent("meshFilter");
+        mf.mesh = app.getAssetMgr().getDefaultMesh("quad");
+        this._renderer.materials[0] = new m4m.framework.material();
+        this._renderer.materials[0].setShader(app.getAssetMgr().getShader(m4m.framework.builtinShader.ULIT_BLEND));
+        //set mat val
+        this.setTex(this._tex);
+        this.setAlpha(this._alpha);
+    };
+    iconGizmo = __decorate([
+        m4m.reflect.nodeComponent
+    ], iconGizmo);
+    return iconGizmo;
+}(m4m.framework.behaviour));
 //let helpv3 = new m4m.math.vector2();
 /** 表面贴花生成器 */
 var decalCreater = /** @class */ (function (_super) {

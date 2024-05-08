@@ -2,6 +2,10 @@
 /** 实时阴影样例 */
 class realtimeShadow implements IState {
 
+    private _texFiles = ["LightAnchor_Icon.png"];
+    private _texUrls = this._texFiles.map((val, i, arr) => { return `${resRootPath}texture/${val}`; });
+    private _tex: m4m.framework.texture[] = [];
+
     changeMaterial(node: m4m.framework.transform, col: m4m.math.color) {
         let mr = node.gameObject.renderer as m4m.framework.meshRenderer;
         if (mr == null) return;
@@ -40,17 +44,6 @@ class realtimeShadow implements IState {
 
     async start(app: m4m.framework.application) {
         let scene = app.getScene();
-        //场景加一个方向光 
-        let objDirLight = new m4m.framework.transform();
-        scene.addChild(objDirLight);
-        objDirLight.setWorldPosition(new m4m.math.vector3(0.5, 5, 0));
-        let dirRotate = new m4m.math.quaternion();
-        m4m.math.quat2Lookat(objDirLight.getWorldPosition(), new m4m.math.vector4(), dirRotate);
-        objDirLight.setWorldRotate(dirRotate);
-        let dirLight = objDirLight.gameObject.addComponent("light") as m4m.framework.light;
-        dirLight.type = m4m.framework.LightTypeEnum.Direction;
-        //方向光开实时阴影
-
         //场景加个相机
         let objCam = new m4m.framework.transform();
         scene.addChild(objCam);
@@ -66,10 +59,28 @@ class realtimeShadow implements IState {
         hoverc.tiltAngle = 45;
         hoverc.distance = 30;
         hoverc.scaleSpeed = 0.1;
-        hoverc.lookAtPoint = new m4m.math.vector3(0, 2.5, 0)
+        hoverc.lookAtPoint = new m4m.math.vector3(0, 2.5, 0);
+
+        //场景加一个方向光 
+        let objDirLight = new m4m.framework.transform();
+        scene.addChild(objDirLight);
+        objDirLight.setWorldPosition(new m4m.math.vector3(0.5, 15, 0));
+        let dirRotate = new m4m.math.quaternion();
+        m4m.math.quat2Lookat(objDirLight.getWorldPosition(), new m4m.math.vector4(), dirRotate);
+        objDirLight.setWorldRotate(dirRotate);
+        let dirLight = objDirLight.gameObject.addComponent("light") as m4m.framework.light;
+        dirLight.type = m4m.framework.LightTypeEnum.Direction;
+        //方向光开实时阴影
 
         //load res
         await util.loadShader(app.getAssetMgr());
+        this._tex = await util.loadTextures(this._texUrls, app.getAssetMgr());
+
+        //gizmo attach
+        let objDirLightGizmo = new m4m.framework.transform();
+        objDirLight.addChild(objDirLightGizmo);
+        let dirLightGizmo = objDirLightGizmo.gameObject.addComponent("iconGizmo") as iconGizmo;
+        dirLightGizmo.setTex(this._tex[0]);
 
         //scene objs
         this.makeSeceneObjects(app);
