@@ -1,10 +1,20 @@
-
 /** 实时阴影样例 */
 class realtimeShadow implements IState {
 
     private _texFiles = ["LightAnchor_Icon.png"];
     private _texUrls = this._texFiles.map((val, i, arr) => { return `${resRootPath}texture/${val}`; });
     private _tex: m4m.framework.texture[] = [];
+
+    private _lightFrustumPoints: m4m.math.vector3[] = [
+        new m4m.math.vector3(),
+        new m4m.math.vector3(0, 10, 0),
+        new m4m.math.vector3(),
+        new m4m.math.vector3(),
+        new m4m.math.vector3(),
+        new m4m.math.vector3(),
+        new m4m.math.vector3(),
+        new m4m.math.vector3(),
+    ];
 
     changeMaterial(node: m4m.framework.transform, col: m4m.math.color) {
         let mr = node.gameObject.renderer as m4m.framework.meshRenderer;
@@ -72,6 +82,9 @@ class realtimeShadow implements IState {
         dirLight.type = m4m.framework.LightTypeEnum.Direction;
         //方向光开实时阴影
 
+        //场景绘线调试工具
+        DebugDrawLineTool.init();
+
         //load res
         await util.loadShader(app.getAssetMgr());
         this._tex = await util.loadTextures(this._texUrls, app.getAssetMgr());
@@ -87,7 +100,36 @@ class realtimeShadow implements IState {
     }
 
     update(delta: number) {
+        //驱动 场景绘线调试工具 tick
+        DebugDrawLineTool.update();
 
+        //调用 绘制选段
+        this.debugDrawLine();
+    }
 
+    debugDrawLine() {
+
+        //draw light Frustum
+        let lfPoints = this._lightFrustumPoints;
+
+        //test circl
+        this.debugDrawLine
+        DebugDrawLineTool.drawCircle(lfPoints[0], 2, 0.15, 1, 0.5, 32);
+
+        //nearFrame
+        DebugDrawLineTool.drawLine(lfPoints[0], lfPoints[1]);
+        DebugDrawLineTool.drawLine(lfPoints[1], lfPoints[2]);
+        DebugDrawLineTool.drawLine(lfPoints[2], lfPoints[3]);
+        DebugDrawLineTool.drawLine(lfPoints[3], lfPoints[0]);
+        //farFrame
+        DebugDrawLineTool.drawLine(lfPoints[4], lfPoints[5]);
+        DebugDrawLineTool.drawLine(lfPoints[5], lfPoints[6]);
+        DebugDrawLineTool.drawLine(lfPoints[6], lfPoints[7]);
+        DebugDrawLineTool.drawLine(lfPoints[7], lfPoints[4]);
+        //center edges
+        DebugDrawLineTool.drawLine(lfPoints[0], lfPoints[4]);
+        DebugDrawLineTool.drawLine(lfPoints[1], lfPoints[5]);
+        DebugDrawLineTool.drawLine(lfPoints[2], lfPoints[6]);
+        DebugDrawLineTool.drawLine(lfPoints[3], lfPoints[7]);
     }
 }

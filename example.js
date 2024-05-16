@@ -1703,6 +1703,16 @@ var realtimeShadow = /** @class */ (function () {
         this._texFiles = ["LightAnchor_Icon.png"];
         this._texUrls = this._texFiles.map(function (val, i, arr) { return "".concat(resRootPath, "texture/").concat(val); });
         this._tex = [];
+        this._lightFrustumPoints = [
+            new m4m.math.vector3(),
+            new m4m.math.vector3(0, 10, 0),
+            new m4m.math.vector3(),
+            new m4m.math.vector3(),
+            new m4m.math.vector3(),
+            new m4m.math.vector3(),
+            new m4m.math.vector3(),
+            new m4m.math.vector3(),
+        ];
     }
     realtimeShadow.prototype.changeMaterial = function (node, col) {
         var mr = node.gameObject.renderer;
@@ -1766,10 +1776,11 @@ var realtimeShadow = /** @class */ (function () {
                         dirLight = objDirLight.gameObject.addComponent("light");
                         dirLight.type = m4m.framework.LightTypeEnum.Direction;
                         //方向光开实时阴影
+                        //场景绘线调试工具
+                        DebugDrawLineTool.init();
                         //load res
                         return [4 /*yield*/, util.loadShader(app.getAssetMgr())];
                     case 1:
-                        //方向光开实时阴影
                         //load res
                         _b.sent();
                         _a = this;
@@ -1788,6 +1799,32 @@ var realtimeShadow = /** @class */ (function () {
         });
     };
     realtimeShadow.prototype.update = function (delta) {
+        //驱动 场景绘线调试工具 tick
+        DebugDrawLineTool.update();
+        //调用 绘制选段
+        this.debugDrawLine();
+    };
+    realtimeShadow.prototype.debugDrawLine = function () {
+        //draw light Frustum
+        var lfPoints = this._lightFrustumPoints;
+        //test circl
+        this.debugDrawLine;
+        DebugDrawLineTool.drawCircle(lfPoints[0], 2, 0.15, 1, 0.5, 32);
+        //nearFrame
+        DebugDrawLineTool.drawLine(lfPoints[0], lfPoints[1]);
+        DebugDrawLineTool.drawLine(lfPoints[1], lfPoints[2]);
+        DebugDrawLineTool.drawLine(lfPoints[2], lfPoints[3]);
+        DebugDrawLineTool.drawLine(lfPoints[3], lfPoints[0]);
+        //farFrame
+        DebugDrawLineTool.drawLine(lfPoints[4], lfPoints[5]);
+        DebugDrawLineTool.drawLine(lfPoints[5], lfPoints[6]);
+        DebugDrawLineTool.drawLine(lfPoints[6], lfPoints[7]);
+        DebugDrawLineTool.drawLine(lfPoints[7], lfPoints[4]);
+        //center edges
+        DebugDrawLineTool.drawLine(lfPoints[0], lfPoints[4]);
+        DebugDrawLineTool.drawLine(lfPoints[1], lfPoints[5]);
+        DebugDrawLineTool.drawLine(lfPoints[2], lfPoints[6]);
+        DebugDrawLineTool.drawLine(lfPoints[3], lfPoints[7]);
     };
     return realtimeShadow;
 }());
@@ -27901,6 +27938,215 @@ var datGui = /** @class */ (function () {
     };
     datGui._inited = false;
     return datGui;
+}());
+/** 调试 线条绘制工具 */
+var DebugDrawLineTool = /** @class */ (function () {
+    function DebugDrawLineTool() {
+    }
+    /**
+     * 初始化 工具
+     * @param rootNode 附着的场景节点（为null 附着到场景根节点）
+     * @returns
+     */
+    DebugDrawLineTool.init = function (rootNode) {
+        if (this.inited)
+            return;
+        var scene = m4m.framework.sceneMgr.scene;
+        this.lineQueue = [];
+        this.lineRoot = new m4m.framework.transform();
+        this.lineRoot.name = "DebugDrawLineTool_root";
+        if (!rootNode) {
+            scene.addChild(this.lineRoot);
+        }
+        else {
+            rootNode.addChild(this.lineRoot);
+        }
+        var col = m4m.math.color;
+        //color
+        var colors = [
+            new col(1, 0, 0, 1),
+            new col(1, 0.498, 0.152, 1),
+            new col(1, 0.941, 0, 1),
+            new col(0, 1, 0, 1),
+            new col(0, 0.9, 0.878, 1),
+            new col(0.419, 0.454, 0.847, 1),
+            new col(0.972, 0, 0.996, 1),
+            new col(1, 1, 1, 1),
+            new col(0, 0, 0, 1),
+            new col(0.6, 0.6, 0.6, 1)
+        ];
+        //color mats
+        var assetMgr = scene.app.getAssetMgr();
+        var sh = assetMgr.getShader("shader/ulit");
+        for (var i = 0, len = colors.length; i < len; i++) {
+            var colorMaterials = [];
+            this.colorAlphaMaterials.push(colorMaterials);
+            for (var j = 0; j < this.alphaGradientStepCount; j++) {
+                var newMat = new m4m.framework.material("color_".concat(i));
+                newMat.setShader(sh);
+                var v4Color = new m4m.math.vector4();
+                v4Color.w = i / this.alphaGradientStepCount;
+                m4m.math.vec4SetByColor(v4Color, colors[i]);
+                newMat.setVector4("_MainColor", v4Color);
+                colorMaterials.push(newMat);
+            }
+        }
+        //templata
+        // let ass = m4m.framework.sceneMgr.app.getAssetMgr();
+        // //初始化模板
+        // let tempT = new m4m.framework.transform2D();
+        // tempT.pivot.y = 0.5;
+        // tempT.height = 3;
+        // tempT.name = "line";
+        // this.template = tempT.addComponent("rawImage2D") as m4m.framework.rawImage2D;
+        // this.template.image = ass.getDefaultTexture(m4m.framework.defTexture.white);
+        // this.template.color = this.colors[0];
+        this.inited = true;
+    };
+    DebugDrawLineTool.getNewLine = function () {
+        var box = m4m.framework.TransformUtil.CreatePrimitive(m4m.framework.PrimitiveType.Cube);
+        var mr = box.gameObject.renderer;
+        var arr = this.colorAlphaMaterials[0];
+        mr.materials[0] = arr[arr.length - 1];
+        return mr;
+    };
+    /**
+     * 绘制线段
+     * @param start 起始点
+     * @param end 结束点
+     * @param thickness 线段宽度
+     * @param colorId 线段颜色[0:红 , 1:橙  ,2:黄 ,3:绿 ,4:青 ,5:蓝 ,6:紫 ,7:白 ,8:黑 ,9:灰]
+     * @param alpha 透明值 0 - 1
+     */
+    DebugDrawLineTool.drawLine = function (start, end, thickness, colorId, alpha) {
+        if (thickness === void 0) { thickness = 0.1; }
+        if (colorId === void 0) { colorId = 0; }
+        if (alpha === void 0) { alpha = 1; }
+        if (!this.inited || !start || !end)
+            return;
+        //尝试从队列获取一个线段
+        //没有 =》 创建一个
+        this.currIndex++;
+        if (this.currIndex >= this.lineQueue.length) {
+            var newLine = this.getNewLine();
+            this.lineRoot.addChild(newLine.gameObject.transform);
+            this.lineQueue.push(newLine);
+        }
+        var line = this.lineQueue[this.currIndex];
+        var tran = line.gameObject.transform;
+        //颜色
+        var _aIdx = Math.floor(alpha * 5);
+        _aIdx = _aIdx < 0 ? 0 : _aIdx >= this.alphaGradientStepCount ? this.alphaGradientStepCount - 1 : _aIdx;
+        line.materials[0] = this.colorAlphaMaterials[colorId][_aIdx];
+        //设置位置、旋转
+        m4m.math.vec3SetAll(tran.localScale, thickness);
+        tran.localPosition = start;
+        tran.lookatPoint(end);
+        //pos
+        var dir = m4m.poolv3();
+        // m4m.math.vec3Subtract(end, start, dir);
+        dir.x = end.x - start.x;
+        dir.y = end.y - start.y;
+        dir.z = end.z - start.z;
+        var lineLen = m4m.math.vec3Length(dir);
+        m4m.math.vec3Normalize(dir, dir);
+        var hlafMoveV3 = dir;
+        m4m.math.vec3ScaleByNum(hlafMoveV3, lineLen * 0.5, hlafMoveV3);
+        var lpos = tran.localPosition;
+        m4m.math.vec3Add(hlafMoveV3, start, lpos);
+        //长度
+        var lScale = tran.localScale;
+        lScale.z = lineLen;
+        //set to trans
+        tran.localScale = lScale;
+        tran.localPosition = lpos;
+        //显示
+        line.gameObject.visible = true;
+        m4m.poolv3_del(dir);
+    };
+    /**
+     * 绘制几何图形 通过 所有点
+     * @param points 路径点
+     * @param thickness 线段宽度
+     * @param colorId 线段颜色[0:红 , 1:橙  ,2:黄 ,3:绿 ,4:青 ,5:蓝 ,6:紫 ,7:白,8:黑 ,9:灰]
+     * @param isSeal 是否封闭
+     * @param alpha 透明值 0 - 1
+     */
+    DebugDrawLineTool.drawPoints = function (points, thickness, colorId, alpha, needClose) {
+        if (thickness === void 0) { thickness = 3; }
+        if (colorId === void 0) { colorId = 0; }
+        if (alpha === void 0) { alpha = 1; }
+        if (needClose === void 0) { needClose = true; }
+        for (var i = 1; i < points.length; i++) {
+            this.drawLine(points[i - 1], points[i], thickness, colorId, alpha);
+        }
+        if (needClose && points.length > 2) {
+            this.drawLine(points[points.length - 1], points[0], thickness, colorId, alpha);
+        }
+    };
+    /**
+     * 绘制圆形
+     * @param pos 圆中心点
+     * @param radius 圆半径
+     * @param thickness 线段宽度
+     * @param colorId 线段颜色[0:红 , 1:橙  ,2:黄 ,3:绿 ,4:青 ,5:蓝 ,6:紫 ,7:白,8:黑 ,9:灰]
+     * @param alpha 透明值 0 - 1
+     * @param sidesNum 边的数量
+     */
+    DebugDrawLineTool.drawCircle = function (pos, radius, thickness, colorId, alpha, sidesNum) {
+        if (thickness === void 0) { thickness = 0.1; }
+        if (colorId === void 0) { colorId = 0; }
+        if (alpha === void 0) { alpha = 1; }
+        if (sidesNum === void 0) { sidesNum = 16; }
+        sidesNum = sidesNum < 3 ? 3 : sidesNum;
+        var len = sidesNum;
+        var deltaDeg = 2 * Math.PI * 1 / sidesNum;
+        var p_a = m4m.poolv3();
+        var p_b = m4m.poolv3();
+        for (var i = 1; i < len; i++) {
+            var deg_2 = deltaDeg * (i - 1);
+            var deg_1_1 = deltaDeg * i;
+            this.setPointCircle(pos, radius, deg_2, p_a);
+            this.setPointCircle(pos, radius, deg_1_1, p_b);
+            this.drawLine(p_a, p_b, thickness, colorId, alpha);
+        }
+        //最后一线
+        var deg = deltaDeg * (len - 1);
+        var deg_1 = 0;
+        this.setPointCircle(pos, radius, deg, p_a);
+        this.setPointCircle(pos, radius, deg_1, p_b);
+        this.drawLine(p_a, p_b, thickness, colorId, alpha);
+        m4m.poolv3_del(p_a);
+        m4m.poolv3_del(p_b);
+    };
+    DebugDrawLineTool.setPointCircle = function (pos, radius, Deg, p) {
+        if (!p)
+            return;
+        p.x = Math.sin(Deg);
+        p.z = Math.cos(Deg);
+        m4m.math.vec3ScaleByNum(p, radius, p);
+        p.x += pos.x;
+        p.z += pos.z;
+    };
+    DebugDrawLineTool.update = function () {
+        if (this.currIndex == -1)
+            return;
+        //隐藏所有的线
+        for (var i = 0; i < this.currIndex + 1; i++) {
+            this.lineQueue[i].gameObject.visible = false;
+        }
+        this.currIndex = -1;
+        // console.error(` lineQueue len : ${this.lineQueue.length}`);
+    };
+    DebugDrawLineTool.right = new m4m.math.vector3(1, 0);
+    DebugDrawLineTool.toAngle = 57.29577951308232;
+    DebugDrawLineTool.toRad = 1 / 180 * Math.PI;
+    DebugDrawLineTool.inited = false;
+    DebugDrawLineTool.currIndex = -1;
+    DebugDrawLineTool.alphaGradientStepCount = 5;
+    // static colors: m4m.math.color[];
+    DebugDrawLineTool.colorAlphaMaterials = [];
+    return DebugDrawLineTool;
 }());
 /** demo 工具 */
 var demoTool = /** @class */ (function () {
